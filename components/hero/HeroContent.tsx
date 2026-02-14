@@ -45,6 +45,7 @@ export default function HeroContent() {
           border border-white/10 bg-white/5 backdrop-blur-md
           shadow-[0_0_15px_rgba(255,255,255,0.05)]
           flex items-center justify-center
+          bg-gradient-to-r from-slate-500 to-slate-900
         "
       >
         <span className="text-[10px] md:text-xs font-medium tracking-[0.25em] uppercase text-white/80">
@@ -59,8 +60,9 @@ export default function HeroContent() {
           max-w-4xl mx-auto text-center
           text-5xl sm:text-6xl md:text-7xl lg:text-8xl
           font-bold tracking-tighter leading-[1.1] md:leading-[1.05]
-          text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/60
+          text-transparent bg-clip-text 
           drop-shadow-2xl
+          bg-gradient-to-r from-slate-500 to-slate-800
         "
       >
         Build What Others <br className="hidden md:block" />

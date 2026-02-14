@@ -2,7 +2,6 @@
 
 import HeroBackground from "@/components/hero/HeroBackground";
 import HeroContent from "@/components/hero/HeroContent";
-import ScrollIndicator from "@/components/hero/ScrollIndicator";
 
 export default function HeroSection() {
   return (
