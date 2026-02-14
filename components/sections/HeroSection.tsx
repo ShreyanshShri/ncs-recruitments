@@ -1,0 +1,32 @@
+"use client";
+
+import HeroBackground from "@/components/hero/HeroBackground";
+import HeroContent from "@/components/hero/HeroContent";
+import ScrollIndicator from "@/components/hero/ScrollIndicator";
+
+export default function HeroSection() {
+  return (
+    <section
+      className="
+        relative
+        w-full
+        h-screen
+
+        flex
+        items-center
+        justify-center
+
+        overflow-hidden
+
+        bg-black
+      "
+    >
+      {/* Background Layer */}
+      <HeroBackground />
+
+      {/* Content Layer */}
+      <HeroContent />
+     
+    </section>
+  );
+}
