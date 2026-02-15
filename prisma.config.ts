@@ -7,7 +7,6 @@ export default defineConfig({
 		path: "prisma/migrations",
 	},
 	datasource: {
-		// Uses the 'env' helper from prisma/config to safely load your URL
-		url: env("DATABASE_URL"),
+		url: env("DIRECT_URL"), // ✅ USE UNPOOLED FOR MIGRATIONS
 	},
 });
