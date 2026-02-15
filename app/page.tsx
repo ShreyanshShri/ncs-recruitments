@@ -1,27 +1,19 @@
-// import React from "react";
-// import Spline from "@splinetool/react-spline/next";
+import HeroSection from "@/components/sections/HeroSection";
+import IdentitySection from "@/components/sections/IdentitySection";
+import AboutSection from "@/components/sections/AboutSection";
 
-// const page = () => {
-//   return (
-//     <div>
-//       <Spline scene="https://prod.spline.design/epRk5J3rZZYI1UHE/scene.splinecode" />
-//     </div>
-//   );
-// };
-
-// export default page;
-
-"use client";
-
-// import dynamic from "next/dynamic";
-
-// const Spline = dynamic(() => import("@splinetool/react-spline"), {
-// 	ssr: false,
-// });
-
-export default function Hero() {
+const page = () => {
 	return (
-		// <Spline scene="https://prod.spline.design/epRk5J3rZZYI1UHE/scene.splinecode" />
-		"faack"
+		<>
+			{/* <Spline
+        className="w-full h-full"
+        scene="https://prod.spline.design/epRk5J3rZZYI1UHE/scene.splinecode"
+      /> */}
+			<HeroSection />
+			<IdentitySection />
+			<AboutSection />
+		</>
 	);
-}
+};
+
+export default page;
