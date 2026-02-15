@@ -24,3 +24,26 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  /* 1. Define the Spin Keyframes 
+    - Smooth linear rotation from 0 to 360 degrees
+  */
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* 2. Define the Utility Class 
+    - 4s duration makes it feel heavy and premium
+    - 'linear' ensures constant speed
+    - 'infinite' loops it forever
+  */
+  .animate-spin-slow {
+    animation: spin-slow 4s linear infinite;
+  }
+}

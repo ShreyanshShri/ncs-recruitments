@@ -38,7 +38,7 @@ export default function Navbar() {
           
           ${
             isScrolled
-              ? "top-4 px-3 rounded-full bg-black/60 w-[90%] max-w-[520px]" // Scrolled: Capsule
+              ? "top-2 px-5 rounded-full bg-black/60 w-[90%] max-w-5xl" // Scrolled: Capsule
               : "top-6  px-8 rounded-2xl bg-black/40 w-[95%] max-w-7xl" // Top: Hero Wide
           }
         `}

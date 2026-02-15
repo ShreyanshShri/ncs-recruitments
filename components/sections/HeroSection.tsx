@@ -9,7 +9,7 @@ export default function HeroSection() {
       className="
         relative
         w-full
-        h-screen
+        h-[100vh]
 
         flex
         items-center
