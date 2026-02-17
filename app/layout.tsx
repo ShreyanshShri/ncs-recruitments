@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local"; // Import the local loader
 import "./globals.css";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
+// Configure The Last Shuriken font
+const lastShuriken = localFont({
+	src: "./fonts/TheLastShuriken.ttf",
+	variable: "--font-shuriken", // This is the CSS variable you'll use
 });
 
 export const metadata: Metadata = {
@@ -25,7 +21,8 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				/* Apply the font variable to the body */
+				className={`${lastShuriken.variable} font-sans antialiased`}
 				suppressHydrationWarning={true}
 			>
 				{children}

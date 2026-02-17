@@ -2,37 +2,60 @@
 
 import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
+import Link from "next/link";
 
 export default function Login() {
 	const initialState = { error: "" };
 	const [state, action, isPending] = useActionState(login, initialState);
 
+	const inputStyle =
+		"w-full rounded-lg bg-bg-dark/60 border border-border-red px-4 py-3 text-sm text-light-beige placeholder:text-light-beige/40 focus:outline-none focus:ring-2 focus:ring-primary-red transition";
+
 	return (
-		<form action={action} className="space-y-4 flex flex-col max-w-sm">
-			<input
-				name="email"
-				type="email"
-				placeholder="Email"
-				className="border p-2 rounded"
-				required
-			/>
-			<input
-				name="password"
-				type="password"
-				placeholder="Password"
-				className="border p-2 rounded"
-				required
-			/>
+		<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-shuriken">
+			<form action={action} className="w-full max-w-md space-y-6">
+				<h1 className="text-beige text-3xl text-center">Login</h1>
 
-			{state?.error && <p className="text-red-500 text-sm">{state.error}</p>}
+				{/* EMAIL */}
+				<input
+					name="email"
+					type="email"
+					placeholder="Email"
+					required
+					className={inputStyle}
+				/>
 
-			<button
-				type="submit"
-				disabled={isPending}
-				className="bg-blue-500 text-white p-2 rounded disabled:bg-gray-400"
-			>
-				{isPending ? "Logging in..." : "Login"}
-			</button>
-		</form>
+				{/* PASSWORD */}
+				<input
+					name="password"
+					type="password"
+					placeholder="Password"
+					required
+					className={inputStyle}
+				/>
+
+				{/* ERROR */}
+				{state?.error && (
+					<p className="text-sm text-primary-red text-center">{state.error}</p>
+				)}
+
+				{/* SUBMIT */}
+				<button
+					type="submit"
+					disabled={isPending}
+					className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition"
+				>
+					{isPending ? "LOGGING IN..." : "LOGIN"}
+				</button>
+
+				{/* SWITCH TO REGISTER */}
+				<Link
+					href="/auth/register"
+					className="block text-center text-beige text-xs font-light"
+				>
+					Don’t have an account? <span className="underline">Register</span>
+				</Link>
+			</form>
+		</div>
 	);
 }

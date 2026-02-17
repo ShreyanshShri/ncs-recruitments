@@ -16,22 +16,24 @@ export function ApplicationCard(props: Props) {
 		const { application } = props;
 
 		return (
-			<div className="border p-4 rounded-xl space-y-2">
-				<h3 className="font-semibold">{application.domain}</h3>
+			<div className="p-4 rounded-xl space-y-2">
+				<h3 className="font-shuriken font-medium ">{application.domain}</h3>
 				{/* <p className="text-sm">Status: {application.status}</p> */}
 				<p className="text-sm">Status: SUBMITTED</p>
 
-				<button className="border px-3 py-1 rounded">View Application</button>
+				{/* <button className="border px-3 py-1 rounded">View Application</button> */}
 			</div>
 		);
 	}
 
 	return (
-		<div className="border p-4 rounded-xl space-y-2">
-			<h3 className="font-semibold">{props.domain}</h3>
+		<div className="p-4 rounded-xl space-y-2">
+			<h3 className="font-shuriken font-medium ">{props.domain}</h3>
 
 			<form action={applyToDomain.bind(null, props.domain)}>
-				<button className="border px-3 py-1 rounded">Apply</button>
+				<button className="border border-primary-red px-3 py-1 rounded font-shuriken font-medium text-[12px] hover:cursor-pointer">
+					Apply
+				</button>
 			</form>
 		</div>
 	);

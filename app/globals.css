@@ -1,4 +1,45 @@
 @import "tailwindcss";
+@theme {
+	/* --- Fonts --- */
+	/* This maps 'font-shuriken' to your Next.js localFont variable */
+	--font-shuriken: var(--font-shuriken), sans-serif;
+
+	/* --- Colors --- */
+	/* Use camelCase or kebab-case; Tailwind v4 will generate classes 
+     like 'text-primary-red' or 'bg-bg-dark' */
+	--color-primary-red: #b0322c;
+	--color-dark-red: #7a1e1b;
+	--color-bg-dark: #120a0a;
+	--color-deep-brown: #1e1312;
+	--color-beige: #e6d2b5;
+	--color-light-beige: #f1e2c8;
+	--color-border-red: #8e2320;
+
+	--animate-pulse-soft: pulse-soft 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-soft {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.8;
+	}
+}
+
+/* Optional: Set your default background and text colors globally */
+@layer base {
+	body {
+		@apply bg-bg-dark text-light-beige antialiased;
+		font-family: var(--font-shuriken);
+	}
+}
+
+/* Optional: Make it the default font for the whole app */
+:root {
+	font-family: var(--font-shuriken), sans-serif;
+}
 /* ---break---
   */
 @custom-variant dark (&:is(.dark *));

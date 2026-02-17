@@ -9,34 +9,37 @@ export function RoundCard({ round }: Props) {
 	const isMcq = round.type === RoundType.MCQ;
 
 	return (
-		<div className="border p-4 rounded-xl space-y-3">
-			<h3 className="font-semibold">{round.title}</h3>
+		<div className="space-y-3">
+			{/* TITLE */}
+			<h3 className="font-shuriken text-lg text-primary-red tracking-wide">
+				{round.title}
+			</h3>
 
-			<p className="text-sm">Type: {round.type}</p>
+			{/* META */}
+			<div className="space-y-1 text-sm font-medium text-bg-dark/80">
+				<p>Type: {round.type}</p>
 
-			{round.startTime && (
-				<p className="text-sm">Starts: {round.startTime.toLocaleString()}</p>
-			)}
+				{round.startTime && <p>Starts: {round.startTime.toLocaleString()}</p>}
 
-			{round.endTime && (
-				<p className="text-sm">Ends: {round.endTime.toLocaleString()}</p>
-			)}
+				{round.endTime && <p>Ends: {round.endTime.toLocaleString()}</p>}
+			</div>
 
 			{/* ACTIONS */}
-			<div className="flex gap-2 pt-2">
+			<div className="flex flex-wrap gap-2 pt-2">
 				{isMcq && (
 					<Link
 						href={`/dashboard/mcq/${round.id}`}
-						className="border px-3 py-1 rounded text-sm"
+						className="border border-primary-red px-3 py-1 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
 					>
 						Start MCQ
 					</Link>
 				)}
 
-				<Link href={`/dashboard/result/${round.id}`}>
-					<button className="border px-3 py-1 rounded text-sm cursor-pointer">
-						View Result
-					</button>
+				<Link
+					href={`/dashboard/result/${round.id}`}
+					className="border border-primary-red px-3 py-1 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+				>
+					View Result
 				</Link>
 			</div>
 		</div>
