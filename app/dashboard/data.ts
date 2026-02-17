@@ -1,4 +1,4 @@
-import { Application, Round, Domain } from "@/types/db"; // Your shared types
+import { Application, Round, Domain } from "@/types/db";
 import { prisma } from "@/app/lib/prisma";
 
 export async function getDashboardData(userId: string) {
@@ -7,7 +7,6 @@ export async function getDashboardData(userId: string) {
 			where: { userId },
 			select: { domain: true },
 		}),
-
 		prisma.user.findUnique({
 			where: { id: userId },
 		}),
@@ -17,32 +16,44 @@ export async function getDashboardData(userId: string) {
 
 	const rounds = await prisma.round.findMany({
 		where: {
-			domain: { in: domains },
+			OR: [
+				{ scope: "COMMON" },
+				{
+					scope: "DOMAIN",
+					domain: { in: domains },
+				},
+			],
 		},
-		orderBy: { startTime: "asc" },
+		orderBy: [{ order: "asc" }, { startTime: "asc" }],
 	});
 
-	// Cast the Prisma results to your shared interface types
 	const typedApplications = applications as unknown as Application[];
 	const typedRounds = rounds as unknown as Round[];
 
 	const appliedDomains = new Set(typedApplications.map((a) => a.domain));
 
-	// Use your shared Domain enum for the "All" list
 	const allDomains = Object.values(Domain) as Domain[];
-
 	const availableDomains = allDomains.filter((d) => !appliedDomains.has(d));
 
-	// Ensure the grouped object knows it's holding your shared Round type
-	const roundsByDomain = Object.groupBy(typedRounds, (r) => r.domain) as Record<
-		Domain,
-		Round[]
-	>;
+	// ✅ separate common rounds
+	const commonRounds = typedRounds.filter((r) => r.scope === "COMMON");
+
+	// ✅ group only domain rounds
+	const domainRounds = typedRounds.filter(
+		(r): r is Round & { domain: Domain } =>
+			r.scope === "DOMAIN" && r.domain !== null,
+	);
+
+	const roundsByDomain = Object.groupBy(
+		domainRounds,
+		(r) => r.domain,
+	) as Record<Domain, Round[]>;
 
 	return {
 		applications: typedApplications,
 		availableDomains,
 		roundsByDomain,
+		commonRounds,
 		user,
 	};
 }

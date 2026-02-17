@@ -6,7 +6,7 @@ import { submitMcq } from "@/app/actions/questions";
 
 export default function McqForm({ round }: { round: any }) {
 	const [state, formAction, isPending] = useActionState(submitMcq, {});
-	console.log(round.questions);
+
 	return (
 		<form action={formAction} className="space-y-6 max-w-2xl mx-auto">
 			<input type="hidden" name="roundId" value={round.id} />

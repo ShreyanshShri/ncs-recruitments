@@ -11,11 +11,10 @@ export default async function Page() {
 			id: true,
 			title: true,
 			domain: true,
+			scope: true, // ⭐ needed to label COMMON properly
 		},
 		orderBy: { createdAt: "desc" },
 	});
-
-	console.log(rounds);
 
 	return (
 		<div className="max-w-2xl mx-auto py-10">

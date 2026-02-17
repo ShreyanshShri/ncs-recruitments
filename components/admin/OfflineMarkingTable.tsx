@@ -56,8 +56,12 @@ export function OfflineMarkingTable({
 
 						return (
 							<tr key={s.id} className="border-t">
-								<td className="p-2">{s.application.user.name}</td>
-								<td className="p-2">{s.application.user.email}</td>
+								<td className="p-2">
+									{s.application?.user?.name ?? s.user?.name ?? "—"}
+								</td>
+								<td className="p-2">
+									{s.application?.user?.email ?? s.user?.email ?? "—"}
+								</td>
 
 								{markingScheme.map((m: any) => (
 									<td key={m.title} className="p-2">

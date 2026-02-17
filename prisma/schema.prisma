@@ -49,6 +49,11 @@ enum QuestionType {
   INPUT
 }
 
+enum RoundScope {
+  COMMON
+  DOMAIN
+}
+
 ////////////////////
 // AUTH
 ////////////////////
@@ -62,7 +67,8 @@ model User {
 
   applications Application[]
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime     @default(now())
+  submissions Submission[]
 
   @@map("users")
 }
@@ -94,7 +100,8 @@ model Application {
 model Round {
   id String @id @default(cuid())
 
-  domain Domain
+  scope  RoundScope
+  domain Domain?
   order  Int
 
   type  RoundType
@@ -147,20 +154,24 @@ model Question {
 model Submission {
   id String @id @default(cuid())
 
-  applicationId String
-  roundId       String
+  roundId String
+
+  userId        String? // ⭐ NEW
+  applicationId String? // ⭐ make optional
 
   status SubmissionStatus @default(NOT_STARTED)
 
   score     Float?
   responses Json?
 
-  application Application @relation(fields: [applicationId], references: [id])
-  round       Round       @relation(fields: [roundId], references: [id])
+  user        User?        @relation(fields: [userId], references: [id])
+  application Application? @relation(fields: [applicationId], references: [id])
+  round       Round        @relation(fields: [roundId], references: [id])
 
   evaluatedBy String?
 
   createdAt DateTime @default(now())
 
   @@unique([applicationId, roundId])
+  @@unique([userId, roundId]) // ⭐ prevents duplicate COMMON submissions
 }

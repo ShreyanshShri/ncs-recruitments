@@ -41,7 +41,6 @@ export async function submitMcq(
 	const session = await requireUser();
 	const roundId = formData.get("roundId") as string;
 
-	// Convert FormData into the Record<string, string> your logic expects
 	const responses: Record<string, string> = {};
 	formData.forEach((value, key) => {
 		if (key.startsWith("responses.")) {
@@ -54,7 +53,10 @@ export async function submitMcq(
 		const submission = await prisma.submission.findFirst({
 			where: {
 				roundId,
-				application: { userId: session.userId },
+				OR: [
+					{ userId: session.userId },
+					{ application: { userId: session.userId } },
+				],
 			},
 			include: {
 				round: { include: { questions: true } },
@@ -66,10 +68,10 @@ export async function submitMcq(
 			return { error: "Already submitted" };
 
 		let score = 0;
+
 		for (const q of submission.round.questions) {
 			const correct = q.answer;
 			const given = responses[q.id];
-			// Assuming q.marks is a number; fallback to 1 if not defined
 			if (correct === given) score += q.marks ?? 1;
 		}
 
@@ -77,7 +79,7 @@ export async function submitMcq(
 			where: { id: submission.id },
 			data: {
 				status: "SUBMITTED",
-				responses: responses as any, // Prisma Json field
+				responses: responses as any,
 				score,
 			},
 		});
@@ -86,5 +88,5 @@ export async function submitMcq(
 	}
 
 	revalidatePath("/dashboard");
-	redirect("/dashboard"); // Redirect after success
+	redirect("/dashboard");
 }

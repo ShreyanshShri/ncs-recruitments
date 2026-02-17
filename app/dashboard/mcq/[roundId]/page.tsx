@@ -7,12 +7,11 @@ export default async function McqPage({
 }: {
 	params: Promise<{ domain: string; roundId: string }>;
 }) {
-	const { domain, roundId } = await params;
+	const { roundId } = await params;
 	const session = await requireUser();
 
 	const result = await getMcqRoundForUser({
 		userId: session.userId,
-		domain,
 		roundId,
 	});
 

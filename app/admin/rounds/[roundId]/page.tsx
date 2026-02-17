@@ -12,7 +12,7 @@ export default async function RoundPage({
 	await requireAdmin();
 	const resolvedParams = await params;
 	const roundId = resolvedParams.roundId;
-	console.log(roundId);
+
 	const round = await prisma.round.findUnique({
 		where: { id: roundId },
 	});
@@ -23,6 +23,7 @@ export default async function RoundPage({
 		where: { roundId: round.id },
 		orderBy: { score: "desc" },
 		include: {
+			user: true,
 			application: {
 				include: { user: true },
 			},
@@ -66,8 +67,12 @@ export default async function RoundPage({
 								{submissions.map((s, i) => (
 									<tr key={s.id} className="border-t">
 										<td className="p-2">{i + 1}</td>
-										<td className="p-2">{s.application.user.name}</td>
-										<td className="p-2">{s.application.user.email}</td>
+										<td className="p-2">
+											{s.application?.user?.name ?? s.user?.name ?? "—"}
+										</td>
+										<td className="p-2">
+											{s.application?.user?.email ?? s.user?.email ?? "—"}
+										</td>
 										<td className="p-2">{s.score ?? "-"}</td>
 										<td className="p-2">{s.status}</td>
 									</tr>

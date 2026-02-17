@@ -7,7 +7,7 @@ import { RoundCard } from "@/components/dashboard/RoundCard";
 export default async function Dashboard() {
 	const session = await requireUser();
 
-	const { applications, availableDomains, roundsByDomain, user } =
+	const { applications, availableDomains, commonRounds, roundsByDomain, user } =
 		await getDashboardData(session.userId);
 
 	return (
@@ -45,15 +45,29 @@ export default async function Dashboard() {
 			)}
 
 			{/* ACTIVE ROUNDS */}
-			<section className="space-y-4">
+			<section className="space-y-6">
 				<h2 className="text-xl font-semibold">Upcoming / Active Rounds</h2>
 
+				{/* 🌐 COMMON ROUNDS */}
+				{commonRounds.length > 0 && (
+					<div className="space-y-2">
+						<h3 className="font-bold">Common</h3>
+
+						<div className="grid grid-cols-3 gap-4">
+							{commonRounds.map((round) => (
+								<RoundCard key={round.id} round={round} />
+							))}
+						</div>
+					</div>
+				)}
+
+				{/* 🎯 DOMAIN ROUNDS */}
 				{Object.entries(roundsByDomain).map(([domain, rounds]) => (
 					<div key={domain} className="space-y-2">
 						<h3 className="font-bold">{domain}</h3>
 
 						<div className="grid grid-cols-3 gap-4">
-							{rounds?.map((round) => (
+							{rounds.map((round) => (
 								<RoundCard key={round.id} round={round} />
 							))}
 						</div>

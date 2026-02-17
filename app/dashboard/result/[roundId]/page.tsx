@@ -8,14 +8,13 @@ export default async function ResultPage({
 	params: Promise<{ domain: string; roundId: string }>;
 }) {
 	const { userId } = await requireUser();
-
-	const { domain, roundId } = await params;
+	const { roundId } = await params;
 
 	const round = await prisma.round.findUnique({
 		where: { id: roundId },
 	});
 
-	if (!round || round.domain !== domain) return notFound();
+	if (!round) return notFound();
 
 	// ⏳ Not published yet
 	if (!round.isPublished) {
@@ -29,29 +28,17 @@ export default async function ResultPage({
 		);
 	}
 
-	// 1️⃣ Application for this domain
-	const application = await prisma.application.findUnique({
+	// ✅ Find MY submission (COMMON + DOMAIN)
+	const mySubmission = await prisma.submission.findFirst({
 		where: {
-			userId_domain: {
-				userId,
-				domain: round.domain,
-			},
+			roundId: round.id,
+			OR: [{ userId }, { application: { userId } }],
 		},
 	});
 
-	if (!application) return notFound();
+	if (!mySubmission) return notFound();
 
-	// 2️⃣ My submission
-	const mySubmission = await prisma.submission.findUnique({
-		where: {
-			applicationId_roundId: {
-				applicationId: application.id,
-				roundId: round.id,
-			},
-		},
-	});
-
-	// 3️⃣ Qualified leaderboard (top 50)
+	// ✅ Leaderboard
 	const leaderboard = await prisma.submission.findMany({
 		where: {
 			roundId: round.id,
@@ -60,21 +47,22 @@ export default async function ResultPage({
 		orderBy: { score: "desc" },
 		take: 50,
 		include: {
+			user: { select: { name: true } }, // COMMON
 			application: {
 				include: {
-					user: {
-						select: { name: true },
-					},
+					user: { select: { name: true } }, // DOMAIN
 				},
 			},
 		},
 	});
 
 	const qualified =
-		mySubmission &&
 		round.cutoff !== null &&
 		mySubmission.score !== null &&
 		mySubmission.score >= round.cutoff;
+
+	const getName = (s: (typeof leaderboard)[number]) =>
+		s.application?.user?.name ?? s.user?.name ?? "—";
 
 	return (
 		<div className="max-w-4xl mx-auto py-10 space-y-8">
@@ -82,7 +70,8 @@ export default async function ResultPage({
 			<div>
 				<h1 className="text-2xl font-bold">{round.title} — Result</h1>
 				<p className="text-muted-foreground">
-					{round.domain} • Round {round.order}
+					{round.scope === "COMMON" ? "Common" : round.domain} • Round{" "}
+					{round.order}
 				</p>
 			</div>
 
@@ -90,7 +79,7 @@ export default async function ResultPage({
 			<div className="border rounded-xl p-5 space-y-2">
 				<div className="text-lg font-semibold">Your Performance</div>
 
-				<div>Score: {mySubmission?.score ?? "—"}</div>
+				<div>Score: {mySubmission.score ?? "—"}</div>
 				<div>Cutoff: {round.cutoff}</div>
 
 				<div
@@ -124,7 +113,7 @@ export default async function ResultPage({
 							{leaderboard.map((s, i) => (
 								<tr key={s.id} className="border-t">
 									<td className="p-2">{i + 1}</td>
-									<td className="p-2">{s.application.user.name}</td>
+									<td className="p-2">{getName(s)}</td>
 									<td className="p-2">{s.score}</td>
 								</tr>
 							))}

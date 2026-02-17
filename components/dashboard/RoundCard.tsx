@@ -26,14 +26,14 @@ export function RoundCard({ round }: Props) {
 			<div className="flex gap-2 pt-2">
 				{isMcq && (
 					<Link
-						href={`/dashboard/${round.domain}/mcq/${round.id}`}
+						href={`/dashboard/mcq/${round.id}`}
 						className="border px-3 py-1 rounded text-sm"
 					>
 						Start MCQ
 					</Link>
 				)}
 
-				<Link href={`/dashboard/${round.domain}/result/${round.id}`}>
+				<Link href={`/dashboard/result/${round.id}`}>
 					<button className="border px-3 py-1 rounded text-sm cursor-pointer">
 						View Result
 					</button>

@@ -2,14 +2,21 @@
 
 import { useState } from "react";
 import { addMarkingScheme } from "@/app/actions/rounds";
+// import { Domain } from "@/types/db";/
+import { Domain, RoundScope } from "@prisma/client";
 
-type Round = {
+type RoundOption = {
 	id: string;
 	title: string;
-	domain: string;
+	domain: Domain | null;
+	scope: RoundScope;
 };
 
-export default function MarkingSchemeClient({ rounds }: { rounds: Round[] }) {
+export default function MarkingSchemeClient({
+	rounds,
+}: {
+	rounds: RoundOption[];
+}) {
 	const [roundId, setRoundId] = useState("");
 	const [criteria, setCriteria] = useState<
 		{ title: string; maxMarks: number }[]
@@ -25,8 +32,11 @@ export default function MarkingSchemeClient({ rounds }: { rounds: Round[] }) {
 		value: string,
 	) {
 		const copy = [...criteria];
-		(copy[index][field] as string | number) =
-			field === "maxMarks" ? Number(value) : value;
+
+		copy[index] = {
+			...copy[index],
+			[field]: field === "maxMarks" ? Number(value) : value,
+		};
 
 		setCriteria(copy);
 	}
@@ -55,9 +65,10 @@ export default function MarkingSchemeClient({ rounds }: { rounds: Round[] }) {
 				className="w-full border px-3 py-2 rounded"
 			>
 				<option value="">Select round</option>
+
 				{rounds.map((r) => (
 					<option key={r.id} value={r.id}>
-						{r.title} — {r.domain}
+						{r.title} — {r.scope === "COMMON" ? "Common" : r.domain}
 					</option>
 				))}
 			</select>
@@ -86,15 +97,12 @@ export default function MarkingSchemeClient({ rounds }: { rounds: Round[] }) {
 				</div>
 			))}
 
-			{/* Add button */}
 			<button onClick={addRow} className="border px-3 py-1 rounded text-sm">
 				+ Add
 			</button>
 
-			{/* Total */}
 			<div className="font-medium">Total: {total}</div>
 
-			{/* Save */}
 			<button
 				onClick={handleSave}
 				className="bg-black text-white px-4 py-2 rounded"

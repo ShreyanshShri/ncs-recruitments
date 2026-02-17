@@ -11,6 +11,7 @@ export default async function Page() {
 			id: true,
 			title: true,
 			domain: true,
+			scope: true,
 		},
 		orderBy: { createdAt: "desc" },
 	});

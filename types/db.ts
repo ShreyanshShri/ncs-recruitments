@@ -36,6 +36,11 @@ export enum QuestionType {
 	INPUT = "INPUT",
 }
 
+export enum RoundScope {
+	COMMON = "COMMON",
+	DOMAIN = "DOMAIN",
+}
+
 // Interfaces
 export interface User {
 	id: string;
@@ -55,17 +60,16 @@ export interface Application {
 
 export interface Round {
 	id: string;
-	domain: Domain;
-	type: RoundType;
-	order: number;
 	title: string;
+	order: number;
+	type: RoundType;
+	scope: "COMMON" | "DOMAIN";
+	domain: Domain | null;
 	isActive: boolean;
 	isPublished: boolean;
-	publishedAt: Date;
 	startTime: Date | string | null;
 	endTime: Date | string | null;
 	cutoff: number | null;
-	maxScore: number | null;
 	markingScheme: any;
 	createdAt: Date | string;
 }
@@ -82,8 +86,9 @@ export interface Question {
 
 export interface Submission {
 	id: string;
-	applicationId: string;
 	roundId: string;
+	userId: string | null;
+	applicationId: string | null;
 	status: SubmissionStatus;
 	score: number | null;
 	responses: any;

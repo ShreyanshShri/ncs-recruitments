@@ -30,14 +30,23 @@ export function CreateRoundForm() {
 				/>
 			</div>
 
+			{/* Scope */}
+			<div>
+				<label className="block text-sm font-medium mb-1">Scope</label>
+				<select
+					name="scope"
+					className="w-full border px-3 py-2 rounded"
+					required
+				>
+					<option value="COMMON">COMMON</option>
+					<option value="DOMAIN">DOMAIN</option>
+				</select>
+			</div>
+
 			{/* Domain */}
 			<div>
 				<label className="block text-sm font-medium mb-1">Domain</label>
-				<select
-					name="domain"
-					required
-					className="w-full border px-3 py-2 rounded"
-				>
+				<select name="domain" className="w-full border px-3 py-2 rounded">
 					{Object.values(Domain).map((d) => (
 						<option key={d} value={d}>
 							{d}

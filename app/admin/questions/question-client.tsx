@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { createQuestion } from "@/app/actions/questions";
+import { Domain, RoundScope } from "@prisma/client";
 
-type Round = {
+type RoundOption = {
 	id: string;
 	title: string;
-	domain: string;
+	domain: Domain | null;
+	scope: RoundScope;
 };
 
-export default function QuestionClient({ rounds }: { rounds: Round[] }) {
+export default function QuestionClient({ rounds }: { rounds: RoundOption[] }) {
 	const [roundId, setRoundId] = useState("");
 	const [type, setType] = useState<"MCQ" | "INPUT">("MCQ");
 	const [question, setQuestion] = useState("");
