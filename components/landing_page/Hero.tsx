@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import bgImage from "@/assets/BG.png";
 import texture from "@/assets/bg2.jpg";
-import Link from "next/link";
 
-const Hero = () => {
+const Hero = ({ setLoadSite }: { setLoadSite: any }) => {
 	const [loaded, setLoaded] = useState(false);
 
 	useEffect(() => {
@@ -49,18 +48,19 @@ const Hero = () => {
 
 					{/* Button */}
 					<div className=" border-borderRed rounded-md  shadow-md animate-pulse-soft mt-2">
-						<Link href="/auth/register">
-							<button
-								className="m-0.5 px-5 py-2 text-lg font-semibold text-deep-brown cursor-pointer"
-								style={{
-									backgroundImage: `url(${texture.src})`,
-									backgroundSize: "cover",
-									backgroundPosition: "center",
-								}}
-							>
-								BEGIN YOUR JOURNEY
-							</button>
-						</Link>
+						{/* <Link href="/auth/register"> */}
+						<button
+							className="m-0.5 px-5 py-2 text-lg font-semibold text-deep-brown cursor-pointer"
+							style={{
+								backgroundImage: `url(${texture.src})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}
+							onClick={() => setLoadSite(true)}
+						>
+							BEGIN YOUR JOURNEY
+						</button>
+						{/* </Link> */}
 					</div>
 				</div>
 			</div>

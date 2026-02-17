@@ -4,6 +4,9 @@ import { useActionState, useState, useEffect } from "react";
 import { signup } from "@/app/actions/auth";
 import Link from "next/link";
 
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/landing_page/Footer";
+
 interface FormState {
 	error?: string;
 	success?: boolean;
@@ -30,139 +33,149 @@ export default function SignupForm() {
 		"w-full rounded-lg bg-bg-dark/60 border border-border-red px-4 py-3 text-sm text-light-beige placeholder:text-light-beige/40 focus:outline-none focus:ring-2 focus:ring-primary-red transition";
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-shuriken">
-			<form action={formAction} className="w-full max-w-md space-y-6">
-				<h1 className="text-beige text-3xl text-center">Register</h1>
-				<StepIndicator step={step} />
-				<input
-					type="hidden"
-					name="step"
-					value={step === 1 ? "step1" : "final"}
-				/>
+		<>
+			<Navbar />
+			<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-shuriken">
+				<form action={formAction} className="w-full max-w-md space-y-6">
+					<h1 className="text-beige text-3xl text-center">Register</h1>
+					<StepIndicator step={step} />
+					<input
+						type="hidden"
+						name="step"
+						value={step === 1 ? "step1" : "final"}
+					/>
 
-				{/* ================= STEP 1 ================= */}
-				{step === 1 && (
-					<>
-						<input
-							name="name"
-							placeholder="Name"
-							className={inputStyle}
-							value={step1Data.name}
-							onChange={(e) =>
-								setStep1Data({ ...step1Data, name: e.target.value })
-							}
-						/>
+					{/* ================= STEP 1 ================= */}
+					{step === 1 && (
+						<>
+							<input
+								name="name"
+								placeholder="Name"
+								className={inputStyle}
+								value={step1Data.name}
+								onChange={(e) =>
+									setStep1Data({ ...step1Data, name: e.target.value })
+								}
+							/>
 
-						<input
-							name="email"
-							type="email"
-							placeholder="Email"
-							required
-							className={inputStyle}
-							value={step1Data.email}
-							onChange={(e) =>
-								setStep1Data({ ...step1Data, email: e.target.value })
-							}
-						/>
+							<input
+								name="email"
+								type="email"
+								placeholder="Email"
+								required
+								className={inputStyle}
+								value={step1Data.email}
+								onChange={(e) =>
+									setStep1Data({ ...step1Data, email: e.target.value })
+								}
+							/>
 
-						<input
-							name="password"
-							type="password"
-							placeholder="Password"
-							required
-							className={inputStyle}
-							value={step1Data.password}
-							onChange={(e) =>
-								setStep1Data({ ...step1Data, password: e.target.value })
-							}
-						/>
+							<input
+								name="password"
+								type="password"
+								placeholder="Password"
+								required
+								className={inputStyle}
+								value={step1Data.password}
+								onChange={(e) =>
+									setStep1Data({ ...step1Data, password: e.target.value })
+								}
+							/>
 
-						<button
-							type="button"
-							onClick={() => setStep(2)}
-							className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red transition"
-						>
-							NEXT
-						</button>
-					</>
-				)}
-
-				{/* ================= STEP 2 ================= */}
-				{step === 2 && (
-					<>
-						<input type="hidden" name="name" value={step1Data.name} />
-						<input type="hidden" name="email" value={step1Data.email} />
-						<input type="hidden" name="password" value={step1Data.password} />
-
-						<input
-							name="rollNumber"
-							placeholder="Roll Number"
-							required
-							className={inputStyle}
-						/>
-						<input
-							name="mobile"
-							placeholder="Mobile Number"
-							required
-							className={inputStyle}
-						/>
-
-						<select name="institution" required className={inputStyle}>
-							<option value="">Institution</option>
-							<option value="AKTU">AKTU</option>
-							<option value="JSSUNI">JSSUNI</option>
-						</select>
-
-						<select name="year" required className={inputStyle}>
-							<option value="">Year</option>
-							<option value="FIRST">1st</option>
-							<option value="SECOND">2nd</option>
-							<option value="THIRD">3rd</option>
-							<option value="FOURTH">4th</option>
-						</select>
-
-						<select name="branch" required className={inputStyle}>
-							<option value="">Branch</option>
-							<option value="CSE">CSE</option>
-							<option value="CSE_AIML">CSE AIML</option>
-							<option value="CSE_DS">CSE DS</option>
-							<option value="IT">IT</option>
-							<option value="ECE">ECE</option>
-							<option value="MECHANICAL">MECHANICAL</option>
-							<option value="RAI">RAI</option>
-							<option value="EEE">EEE</option>
-							<option value="EE">EE</option>
-							<option value="CIVIL">CIVIL</option>
-						</select>
-
-						<div className="flex gap-3">
 							<button
 								type="button"
-								onClick={() => setStep(1)}
-								className="w-full rounded-lg border border-border-red py-3 text-light-beige hover:bg-deep-brown transition"
+								onClick={() => setStep(2)}
+								className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red transition"
 							>
-								BACK
+								NEXT
 							</button>
+						</>
+					)}
 
-							<button
-								type="submit"
-								disabled={isPending}
-								className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition"
-							>
-								{isPending ? "CREATING ACCOUNT..." : "SIGN UP"}
-							</button>
-						</div>
-					</>
-				)}
-				<Link href="/auth/login" className="text-beige text-[12px] font-light">
-					Already have an account? <span className="underline">Login</span>
-				</Link>
-				{/* ERROR */}
-				{state?.error && (
-					<p className="text-sm text-primary-red text-center">{state.error}</p>
-				)}
-			</form>
-		</div>
+					{/* ================= STEP 2 ================= */}
+					{step === 2 && (
+						<>
+							<input type="hidden" name="name" value={step1Data.name} />
+							<input type="hidden" name="email" value={step1Data.email} />
+							<input type="hidden" name="password" value={step1Data.password} />
+
+							<input
+								name="rollNumber"
+								placeholder="Roll Number"
+								required
+								className={inputStyle}
+							/>
+							<input
+								name="mobile"
+								placeholder="Mobile Number"
+								required
+								className={inputStyle}
+							/>
+
+							<select name="institution" required className={inputStyle}>
+								<option value="">Institution</option>
+								<option value="AKTU">AKTU</option>
+								<option value="JSSUNI">JSSUNI</option>
+							</select>
+
+							<select name="year" required className={inputStyle}>
+								<option value="">Year</option>
+								<option value="FIRST">1st</option>
+								<option value="SECOND">2nd</option>
+								<option value="THIRD">3rd</option>
+								<option value="FOURTH">4th</option>
+							</select>
+
+							<select name="branch" required className={inputStyle}>
+								<option value="">Branch</option>
+								<option value="CSE">CSE</option>
+								<option value="CSE_AIML">CSE AIML</option>
+								<option value="CSE_DS">CSE DS</option>
+								<option value="IT">IT</option>
+								<option value="ECE">ECE</option>
+								<option value="MECHANICAL">MECHANICAL</option>
+								<option value="RAI">RAI</option>
+								<option value="EEE">EEE</option>
+								<option value="EE">EE</option>
+								<option value="CIVIL">CIVIL</option>
+							</select>
+
+							<div className="flex gap-3">
+								<button
+									type="button"
+									onClick={() => setStep(1)}
+									className="w-full rounded-lg border border-border-red py-3 text-light-beige hover:bg-deep-brown transition"
+								>
+									BACK
+								</button>
+
+								<button
+									type="submit"
+									disabled={isPending}
+									className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition"
+								>
+									{isPending ? "CREATING ACCOUNT..." : "SIGN UP"}
+								</button>
+							</div>
+						</>
+					)}
+					<Link
+						href="/auth/login"
+						className="text-beige text-[12px] font-light"
+					>
+						Already have an account? <span className="underline">Login</span>
+					</Link>
+					{/* ERROR */}
+					{state?.error && (
+						<p className="text-sm text-primary-red text-center">
+							{state.error}
+						</p>
+					)}
+				</form>
+			</div>
+
+			<Footer />
+		</>
 	);
 }
 
