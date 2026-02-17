@@ -3,6 +3,7 @@ import { prisma } from "@/app/lib/prisma";
 import { notFound } from "next/navigation";
 import { PublishMcqForm } from "@/components/admin/PublishMcqForm";
 import { OfflineMarkingTable } from "@/components/admin/OfflineMarkingTable";
+import { ResumeEvaluationTable } from "@/components/admin/ResumeEvaluationTable";
 
 export default async function RoundPage({
 	params,
@@ -97,6 +98,20 @@ export default async function RoundPage({
 						submissions={submissions}
 						markingScheme={round.markingScheme}
 					/>
+				</div>
+			)}
+
+			{round.type === "RESUME" && (
+				<div className="space-y-4">
+					<PublishMcqForm
+						roundId={round.id}
+						totalSubmissions={submissions.length}
+						isPublished={round.isPublished}
+					/>
+
+					<h2 className="text-xl font-semibold">Resume Evaluation</h2>
+
+					<ResumeEvaluationTable submissions={submissions} />
 				</div>
 			)}
 		</div>

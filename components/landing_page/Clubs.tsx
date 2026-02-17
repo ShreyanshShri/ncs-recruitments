@@ -1,4 +1,5 @@
 import ClubCard from "./ClubCard";
+import { Code2, LayoutDashboard, Palette, BrainCircuit } from "lucide-react";
 
 const Clubs = () => {
 	return (
@@ -21,32 +22,32 @@ const Clubs = () => {
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 max-w-7xl mx-auto">
 				<ClubCard
 					title="Programming Club"
-					icon="</>"
-					gradient=""
+					icon={Code2}
+					gradient="from-red-500 to-orange-400"
 					description="Master logic, data structures, and algorithms through
       problem-solving and competitive programming challenges."
 				/>
 
 				<ClubCard
 					title="Development Club"
-					icon="🧩"
-					gradient=""
+					icon={LayoutDashboard}
+					gradient="from-blue-500 to-cyan-400"
 					description="Build real-world web applications using modern frameworks
       and tools while learning full-stack development practices."
 				/>
 
 				<ClubCard
 					title="Design Club"
-					icon="🎨"
-					gradient=""
+					icon={Palette}
+					gradient="from-pink-500 to-purple-500"
 					description="Explore UI/UX principles, visual storytelling, and creative
       design to craft beautiful and intuitive digital experiences."
 				/>
 
 				<ClubCard
 					title="AI / ML Club"
-					icon="🤖"
-					gradient=""
+					icon={BrainCircuit}
+					gradient="from-emerald-500 to-lime-400"
 					description="Dive into Artificial Intelligence and Machine Learning by
       training models, analyzing data, and building intelligent systems."
 				/>

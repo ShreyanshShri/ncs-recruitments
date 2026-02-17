@@ -16,19 +16,21 @@ export default async function ResultPage({
 
 	if (!round) return notFound();
 
-	// ⏳ Not published yet
 	if (!round.isPublished) {
 		return (
-			<div className="max-w-3xl mx-auto py-10 text-center">
-				<h1 className="text-2xl font-semibold">Results not published</h1>
-				<p className="text-muted-foreground mt-2">
-					Please wait until the results are announced.
-				</p>
+			<div className="min-h-screen bg-bg-dark text-beige flex items-center justify-center px-6">
+				<div className="text-center space-y-3">
+					<h1 className="text-3xl font-shuriken text-primary-red">
+						Results not published
+					</h1>
+					<p className="text-light-beige">
+						Please wait until the results are announced.
+					</p>
+				</div>
 			</div>
 		);
 	}
 
-	// ✅ Find MY submission (COMMON + DOMAIN)
 	const mySubmission = await prisma.submission.findFirst({
 		where: {
 			roundId: round.id,
@@ -38,7 +40,6 @@ export default async function ResultPage({
 
 	if (!mySubmission) return notFound();
 
-	// ✅ Leaderboard
 	const leaderboard = await prisma.submission.findMany({
 		where: {
 			roundId: round.id,
@@ -47,11 +48,9 @@ export default async function ResultPage({
 		orderBy: { score: "desc" },
 		take: 50,
 		include: {
-			user: { select: { name: true } }, // COMMON
+			user: { select: { name: true } },
 			application: {
-				include: {
-					user: { select: { name: true } }, // DOMAIN
-				},
+				include: { user: { select: { name: true } } },
 			},
 		},
 	});
@@ -65,60 +64,83 @@ export default async function ResultPage({
 		s.application?.user?.name ?? s.user?.name ?? "—";
 
 	return (
-		<div className="max-w-4xl mx-auto py-10 space-y-8">
-			{/* Header */}
-			<div>
-				<h1 className="text-2xl font-bold">{round.title} — Result</h1>
-				<p className="text-muted-foreground">
-					{round.scope === "COMMON" ? "Common" : round.domain} • Round{" "}
-					{round.order}
-				</p>
-			</div>
+		<div className="min-h-screen bg-bg-dark text-beige py-14 px-6">
+			<div className="max-w-4xl mx-auto space-y-10">
+				{/* Header */}
+				<div className="space-y-2">
+					<h1 className="text-4xl font-shuriken text-primary-red tracking-wide">
+						{round.title} — Result
+					</h1>
 
-			{/* My Result */}
-			<div className="border rounded-xl p-5 space-y-2">
-				<div className="text-lg font-semibold">Your Performance</div>
-
-				<div>Score: {mySubmission.score ?? "—"}</div>
-				<div>Cutoff: {round.cutoff}</div>
-
-				<div
-					className={
-						qualified
-							? "text-green-600 font-medium"
-							: "text-red-600 font-medium"
-					}
-				>
-					{qualified ? "Qualified for next round" : "Not qualified"}
+					<p className="text-light-beige">
+						{round.scope === "COMMON" ? "Common" : round.domain} • Round{" "}
+						{round.order}
+					</p>
 				</div>
-			</div>
 
-			{/* Leaderboard */}
-			<div>
-				<h2 className="text-xl font-semibold mb-3">
-					Qualified Candidates (Top 50)
-				</h2>
+				{/* My Result Card */}
+				<div className="bg-light-beige text-bg-dark rounded-2xl p-6 border border-border-red shadow-lg space-y-3">
+					<h2 className="text-2xl font-shuriken text-dark-red">
+						Your Performance
+					</h2>
 
-				<div className="border rounded-lg overflow-hidden">
-					<table className="w-full text-sm">
-						<thead className="bg-muted">
-							<tr>
-								<th className="p-2 text-left">Rank</th>
-								<th className="p-2 text-left">Name</th>
-								<th className="p-2 text-left">Score</th>
-							</tr>
-						</thead>
+					<div className="flex justify-between text-sm">
+						<span>Score</span>
+						<span className="font-semibold">{mySubmission.score ?? "—"}</span>
+					</div>
 
-						<tbody>
-							{leaderboard.map((s, i) => (
-								<tr key={s.id} className="border-t">
-									<td className="p-2">{i + 1}</td>
-									<td className="p-2">{getName(s)}</td>
-									<td className="p-2">{s.score}</td>
+					<div className="flex justify-between text-sm">
+						<span>Cutoff</span>
+						<span className="font-semibold">{round.cutoff}</span>
+					</div>
+
+					<div
+						className={`pt-2 text-sm font-semibold ${
+							qualified ? "text-green-700" : "text-primary-red"
+						}`}
+					>
+						{qualified ? "Qualified for next round" : "Not qualified"}
+					</div>
+				</div>
+
+				{/* Leaderboard */}
+				<div className="space-y-4">
+					<h2 className="text-2xl font-shuriken text-beige">
+						Qualified Candidates (Top 50)
+					</h2>
+
+					<div className="rounded-xl overflow-hidden border border-border-red">
+						<table className="w-full text-sm">
+							<thead className="bg-deep-brown text-light-beige">
+								<tr>
+									<th className="p-3 text-left font-shuriken tracking-wide">
+										Rank
+									</th>
+									<th className="p-3 text-left font-shuriken tracking-wide">
+										Name
+									</th>
+									<th className="p-3 text-left font-shuriken tracking-wide">
+										Score
+									</th>
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+
+							<tbody>
+								{leaderboard.map((s, i) => (
+									<tr
+										key={s.id}
+										className="border-t border-border-red/40 hover:bg-deep-brown/40 transition"
+									>
+										<td className="p-3">{i + 1}</td>
+										<td className="p-3">{getName(s)}</td>
+										<td className="p-3 font-semibold text-light-beige">
+											{s.score}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -24,9 +24,13 @@ export default function Navbar() {
 
 				{/* DESKTOP MENU */}
 				<ul className="hidden md:flex items-center gap-10 text-beige text-sm tracking-widest">
-					<li className="font-shuriken cursor-pointer hover:text-primary-red transition">
+					<Link
+						// href="/about"
+						href="https://hackncs.in"
+						className="font-shuriken hover:text-primary-red transition cursor-pointer"
+					>
 						ABOUT US
-					</li>
+					</Link>
 
 					<Link
 						href="/auth/register"

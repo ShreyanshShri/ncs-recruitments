@@ -71,6 +71,20 @@ export function CreateRoundForm() {
 				</select>
 			</div>
 
+			<div>
+				<label className="block text-sm font-medium mb-1">Year</label>
+				<select
+					name="year"
+					className="w-full border px-3 py-2 rounded"
+					required
+				>
+					<option value="FIRST">First Year</option>
+					<option value="SECOND">Second Year</option>
+					<option value="THIRD">Third Year</option>
+					<option value="FOURTH">Fourth Year</option>
+				</select>
+			</div>
+
 			{/* Start Time */}
 			<div>
 				<label className="block text-sm font-medium mb-1">Start Time</label>

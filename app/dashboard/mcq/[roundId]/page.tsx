@@ -1,6 +1,7 @@
 import { requireUser } from "@/app/lib/auth";
 import { getMcqRoundForUser } from "./data";
 import McqForm from "./mcq-form";
+import Link from "next/link";
 
 export default async function McqPage({
 	params,
@@ -15,26 +16,37 @@ export default async function McqPage({
 		roundId,
 	});
 
-	// 1. Friendly Error UI
+	/* ❌ Friendly Error / Notice */
 	if (result.status !== "SUCCESS") {
 		return (
-			<div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-				<div className="p-6 bg-amber-50 border border-amber-200 rounded-lg text-center">
-					<h2 className="text-xl font-bold text-amber-800 mb-2">Notice</h2>
-					<p className="text-amber-700">{result.error}</p>
-					<a href="/dashboard" className="mt-4 inline-block text-sm underline">
+			<div className="min-h-screen bg-bg-dark flex items-center justify-center px-6">
+				<div className="bg-light-beige text-bg-dark border border-border-red rounded-2xl p-8 max-w-md w-full text-center space-y-4 shadow-lg">
+					<h2 className="text-2xl font-shuriken text-dark-red">Notice</h2>
+
+					<p className="text-md">{result.error}</p>
+
+					<Link
+						href="/dashboard"
+						className="underline inline-block mt-2 text-primary-red font-shuriken tracking-wide hover:text-dark-red transition"
+					>
 						Return to Dashboard
-					</a>
+					</Link>
 				</div>
 			</div>
 		);
 	}
 
-	// 2. Success UI
+	/* ✅ Success */
 	return (
-		<div className="container mx-auto py-8">
-			{/* <h1 className="text-2xl font-bold mb-6">{result.round?.name}</h1> */}
-			<McqForm round={result.round} />
+		<div className="min-h-screen bg-bg-dark py-12 px-6">
+			<div className="max-w-5xl mx-auto space-y-8">
+				{/* Optional round title */}
+				<h1 className="text-3xl font-shuriken text-primary-red tracking-wide text-center">
+					{result.round?.title}
+				</h1>
+
+				<McqForm round={result.round} />
+			</div>
 		</div>
 	);
 }

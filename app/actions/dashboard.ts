@@ -5,15 +5,31 @@ import { requireUser } from "@/app/lib/auth";
 import { Domain } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export async function applyToDomain(domain: Domain) {
-	const session = await requireUser();
+type ApplyState = {
+	success: boolean;
+	message: string;
+};
 
-	await prisma.application.create({
-		data: {
-			userId: session.userId,
-			domain,
-		},
-	});
+export async function applyToDomain(
+	prevState: ApplyState,
+	formData: FormData,
+): Promise<ApplyState> {
+	try {
+		const session = await requireUser();
 
-	revalidatePath("/dashboard");
+		const domain = formData.get("domain") as Domain;
+
+		await prisma.application.create({
+			data: {
+				userId: session.userId,
+				domain,
+			},
+		});
+
+		revalidatePath("/dashboard");
+
+		return { success: true, message: "Applied successfully." };
+	} catch {
+		return { success: false, message: "Try again." };
+	}
 }

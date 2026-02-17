@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/landing_page/Navbar";
 import Footer from "@/components/landing_page/Footer";
 import { useActionState } from "react";
 import { login } from "@/app/actions/auth";

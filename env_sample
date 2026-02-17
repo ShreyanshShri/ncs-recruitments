@@ -1,0 +1,8 @@
+DATABASE_URL="local_pg_db_url?sslmode=disable"
+DIRECT_URL="local_pg_db_url?sslmode=disable"
+
+JWT_SECRET=""
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=""
+CLOUDINARY_API_KEY=""
+CLOUDINARY_API_SECRET=""

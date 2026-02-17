@@ -6,8 +6,6 @@ type Props = {
 };
 
 export function RoundCard({ round }: Props) {
-	const isMcq = round.type === RoundType.MCQ;
-
 	return (
 		<div className="space-y-3">
 			{/* TITLE */}
@@ -26,12 +24,21 @@ export function RoundCard({ round }: Props) {
 
 			{/* ACTIONS */}
 			<div className="flex flex-wrap gap-2 pt-2">
-				{isMcq && (
+				{round.type === RoundType.MCQ && (
 					<Link
 						href={`/dashboard/mcq/${round.id}`}
 						className="border border-primary-red px-3 py-1 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
 					>
 						Start MCQ
+					</Link>
+				)}
+
+				{round.type === RoundType.RESUME && (
+					<Link
+						href={`/dashboard/resume/${round.id}`}
+						className="border border-primary-red px-3 py-1 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+					>
+						Submit Resume
 					</Link>
 				)}
 

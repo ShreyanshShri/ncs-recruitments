@@ -4,7 +4,7 @@ import { useActionState, useState, useEffect } from "react";
 import { signup } from "@/app/actions/auth";
 import Link from "next/link";
 
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/landing_page/Navbar";
 import Footer from "@/components/landing_page/Footer";
 
 interface FormState {

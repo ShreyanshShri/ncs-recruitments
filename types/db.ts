@@ -22,6 +22,7 @@ export enum ApplicationStatus {
 export enum RoundType {
 	MCQ = "MCQ",
 	OFFLINE = "OFFLINE",
+	RESUME = "RESUME",
 }
 
 export enum SubmissionStatus {

@@ -6,6 +6,7 @@ import {
 	RoundType,
 	ApplicationStatus,
 	SubmissionStatus,
+	Year,
 } from "@prisma/client";
 import { requireAdmin } from "@/app/lib/auth";
 import { FormState } from "@/components/admin/CreateRoundForm";
@@ -18,19 +19,35 @@ export async function createRound(
 		await requireAdmin();
 
 		const scope = formData.get("scope") as "COMMON" | "DOMAIN";
-		const domain = formData.get("domain") as Domain | null;
 
+		const domainRaw = formData.get("domain");
+		const domain =
+			scope === "DOMAIN" && domainRaw ? (domainRaw as Domain) : null;
+
+		const year = formData.get("year") as Year;
 		const type = formData.get("type") as RoundType;
-		const title = formData.get("title") as string;
+
+		const title = formData.get("title")?.toString().trim();
+
 		const order = Number(formData.get("order"));
 
-		const startTime = formData.get("startTime") as string;
-		const endTime = formData.get("endTime") as string;
+		const startTime = formData.get("startTime")?.toString();
+		const endTime = formData.get("endTime")?.toString();
+
+		// 🔒 validation
+		if (!scope || !type || !year || !title || Number.isNaN(order)) {
+			return { success: false, error: "Missing required fields" };
+		}
+
+		if (scope === "DOMAIN" && !domain) {
+			return { success: false, error: "Domain required for DOMAIN scope" };
+		}
 
 		await prisma.round.create({
 			data: {
 				scope,
-				domain: scope === "DOMAIN" ? domain : null,
+				domain,
+				year,
 				type,
 				title,
 				order,
@@ -67,8 +84,11 @@ export async function startAllFirstRounds(
 		await requireAdmin();
 
 		const result = await prisma.$transaction(async (tx) => {
-			const firstOrder = (await tx.round.aggregate({ _min: { order: true } }))
-				._min.order;
+			const firstOrder = (
+				await tx.round.aggregate({
+					_min: { order: true },
+				})
+			)._min.order;
 
 			if (firstOrder === null) return { created: 0 };
 
@@ -76,23 +96,31 @@ export async function startAllFirstRounds(
 				where: { order: firstOrder },
 			});
 
-			const applications = await tx.application.findMany({
-				where: { status: ApplicationStatus.SUBMITTED },
-				select: { id: true, domain: true, userId: true },
-			});
-
-			const appsByDomain = new Map<Domain, string[]>();
-
-			for (const app of applications) {
-				if (!appsByDomain.has(app.domain)) appsByDomain.set(app.domain, []);
-				appsByDomain.get(app.domain)!.push(app.id);
-			}
-
-			const distinctUsers = [...new Set(applications.map((a) => a.userId))];
-
 			let totalCreated = 0;
 
 			for (const round of rounds) {
+				// ✅ applications ONLY of this year
+				const applications = await tx.application.findMany({
+					where: {
+						status: ApplicationStatus.SUBMITTED,
+						user: {
+							profile: {
+								year: round.year,
+							},
+						},
+					},
+					select: { id: true, domain: true, userId: true },
+				});
+
+				const distinctUsers = [...new Set(applications.map((a) => a.userId))];
+
+				const appsByDomain = new Map<Domain, string[]>();
+
+				for (const app of applications) {
+					if (!appsByDomain.has(app.domain)) appsByDomain.set(app.domain, []);
+					appsByDomain.get(app.domain)!.push(app.id);
+				}
+
 				if (round.scope === "COMMON") {
 					const res = await tx.submission.createMany({
 						data: distinctUsers.map((userId) => ({
@@ -160,26 +188,45 @@ export async function publishMcqRound(
 			const round = await tx.round.findUnique({ where: { id: roundId } });
 			if (!round) return { success: false, message: "Invalid round" };
 
+			// 🟢 ONLY submissions of this YEAR
 			const submissions = await tx.submission.findMany({
-				where: { roundId },
+				where: {
+					roundId,
+					status: SubmissionStatus.EVALUATED,
+					OR: [
+						{
+							application: {
+								user: {
+									profile: { year: round.year },
+								},
+							},
+						},
+						{
+							user: {
+								profile: { year: round.year },
+							},
+						},
+					],
+				},
 				orderBy: { score: "desc" },
 			});
 
 			const qualified = submissions.slice(0, takeCount);
 			const cutoff = qualified.at(-1)?.score ?? 0;
 
-			// =============================
-			// EVALUATION → REJECTION LOGIC
-			// =============================
+			// =====================================================
+			// ❌ REJECTION — YEAR SAFE
+			// =====================================================
 
 			if (round.scope === "DOMAIN") {
 				const qualifiedAppIds = qualified.map((s) => s.applicationId!);
 
 				await tx.application.updateMany({
 					where: {
-						id: { notIn: qualifiedAppIds },
 						domain: round.domain!,
 						status: { not: ApplicationStatus.REJECTED },
+						user: { profile: { year: round.year } },
+						id: { notIn: qualifiedAppIds },
 					},
 					data: { status: ApplicationStatus.REJECTED },
 				});
@@ -188,29 +235,32 @@ export async function publishMcqRound(
 			if (round.scope === "COMMON") {
 				const qualifiedUserIds = new Set(qualified.map((s) => s.userId!));
 
-				const allUsers = submissions.map((s) => s.userId!);
-
-				const rejectedUsers = allUsers.filter(
-					(id) => !qualifiedUserIds.has(id),
-				);
+				const rejectedUserIds = submissions
+					.map((s) => s.userId!)
+					.filter((id) => !qualifiedUserIds.has(id));
 
 				await tx.application.updateMany({
 					where: {
-						userId: { in: rejectedUsers },
+						userId: { in: rejectedUserIds },
 						status: { not: ApplicationStatus.REJECTED },
+						user: { profile: { year: round.year } },
 					},
 					data: { status: ApplicationStatus.REJECTED },
 				});
 			}
 
-			// =============================
-			// PROMOTION
-			// =============================
+			// =====================================================
+			// 🚀 PROMOTION
+			// =====================================================
 
 			const nextOrder = round.order + 1;
 
 			const nextCommonRound = await tx.round.findFirst({
-				where: { order: nextOrder, scope: "COMMON" },
+				where: {
+					order: nextOrder,
+					scope: "COMMON",
+					year: round.year,
+				},
 			});
 
 			if (nextCommonRound) {
@@ -223,6 +273,7 @@ export async function publishMcqRound(
 						where: {
 							id: { in: qualified.map((q) => q.applicationId!) },
 							status: { not: ApplicationStatus.REJECTED },
+							user: { profile: { year: round.year } },
 						},
 						select: { userId: true },
 						distinct: ["userId"],
@@ -246,7 +297,11 @@ export async function publishMcqRound(
 				// COMMON → DOMAIN OR DOMAIN → DOMAIN
 
 				const nextDomainRounds = await tx.round.findMany({
-					where: { order: nextOrder, scope: "DOMAIN" },
+					where: {
+						order: nextOrder,
+						scope: "DOMAIN",
+						year: round.year,
+					},
 				});
 
 				const domainRoundMap = new Map(
@@ -260,6 +315,7 @@ export async function publishMcqRound(
 						where: {
 							userId: { in: qualified.map((q) => q.userId!) },
 							status: { not: ApplicationStatus.REJECTED },
+							user: { profile: { year: round.year } },
 						},
 						select: { id: true, domain: true },
 					});
@@ -270,6 +326,7 @@ export async function publishMcqRound(
 						where: {
 							id: { in: qualified.map((q) => q.applicationId!) },
 							status: { not: ApplicationStatus.REJECTED },
+							user: { profile: { year: round.year } },
 						},
 						select: { id: true, domain: true },
 					});
@@ -295,10 +352,9 @@ export async function publishMcqRound(
 				}
 			}
 
-			await tx.submission.updateMany({
-				where: { roundId },
-				data: { status: SubmissionStatus.EVALUATED },
-			});
+			// =====================================================
+			// 📦 FINALIZE ROUND
+			// =====================================================
 
 			await tx.round.update({
 				where: { id: roundId },
@@ -314,7 +370,8 @@ export async function publishMcqRound(
 				message: `Published. Promoted ${qualified.length}. Cutoff = ${cutoff}`,
 			};
 		});
-	} catch {
+	} catch (e) {
+		console.error(e);
 		return { success: false, message: "Failed to publish results" };
 	}
 }
