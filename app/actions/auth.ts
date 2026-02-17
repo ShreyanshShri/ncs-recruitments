@@ -32,23 +32,41 @@ export async function signup(
 	const user = await prisma.user.create({
 		data: { name, email, password: hashed },
 	});
-	console.log(user);
+
 	await createSession(user.id, user.role);
 
 	redirect("/dashboard");
 }
 
-export async function login(formData: FormData) {
+// Updated login action
+export async function login(
+	prevState: AuthState, // Add prevState
+	formData: FormData,
+): Promise<AuthState> {
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 
+	if (!email || !password) {
+		return { error: "Missing fields" };
+	}
+
 	const user = await prisma.user.findUnique({ where: { email } });
-	if (!user || !user.password) throw new Error("Invalid credentials");
+
+	// Using a generic error message for security (don't reveal if email exists)
+	if (!user || !user.password) {
+		return { error: "Invalid email or password" };
+	}
 
 	const valid = await bcrypt.compare(password, user.password);
-	if (!valid) throw new Error("Invalid credentials");
+	if (!valid) {
+		return { error: "Invalid email or password" };
+	}
 
 	await createSession(user.id, user.role);
 
-	redirect("/dashboard");
+	if (user.role === "USER") {
+		redirect("/dashboard");
+	} else {
+		redirect("/admin");
+	}
 }
