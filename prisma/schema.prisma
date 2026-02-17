@@ -1,15 +1,10 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
-
-////////////////////
-// ENUMS
-////////////////////
 
 enum Role {
   USER
@@ -79,23 +74,18 @@ enum Branch {
   CIVIL
 }
 
-////////////////////
-// AUTH
-////////////////////
-
 model User {
   id       String  @id @default(cuid())
   name     String?
   email    String  @unique
   password String?
-  role     Role    @default(USER)
+  role     String  @default("USER") // Changed to String for SQLite compatibility
 
   applications Application[]
+  submissions  Submission[]
+  profile      UserProfile?
 
-  createdAt   DateTime     @default(now())
-  submissions Submission[]
-
-  profile UserProfile?
+  createdAt DateTime @default(now())
 
   @@map("users")
 }
@@ -109,46 +99,38 @@ model UserProfile {
   rollNumber String
   mobile     String
 
-  institution Institution
-  year        Year
-  branch      Branch
+  institution String // Changed to String for SQLite compatibility
+  year        String // Changed to String for SQLite compatibility
+  branch      String // Changed to String for SQLite compatibility
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-////////////////////
-// APPLICATION
-////////////////////
-
 model Application {
   id String @id @default(cuid())
 
   userId String
-  domain Domain
+  domain String // Changed to String for SQLite compatibility
 
-  status ApplicationStatus @default(SUBMITTED)
+  status String @default("SUBMITTED") // Changed to String for SQLite compatibility
 
   user        User         @relation(fields: [userId], references: [id])
   submissions Submission[]
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, domain]) // user can apply once per domain
+  @@unique([userId, domain])
 }
-
-////////////////////
-// ROUNDS
-////////////////////
 
 model Round {
   id String @id @default(cuid())
 
-  scope  RoundScope
-  domain Domain?
+  scope  String // Changed to String for SQLite compatibility
+  domain String? // Changed to String for SQLite compatibility
   order  Int
 
-  type  RoundType
+  type  String // Changed to String for SQLite compatibility
   title String
 
   isActive    Boolean   @default(false)
@@ -161,19 +143,15 @@ model Round {
   cutoff   Float?
   maxScore Float?
 
-  markingScheme Json?
+  markingScheme String? // Changed to String (JSON stored as string) for SQLite compatibility
 
   submissions Submission[]
   questions   Question[]
 
   createdAt DateTime @default(now())
 
-  @@unique([domain, order]) // prevents duplicate positions
+  @@unique([domain, order])
 }
-
-////////////////////
-// MCQ QUESTIONS
-////////////////////
 
 model Question {
   id      String @id @default(cuid())
@@ -181,9 +159,9 @@ model Question {
 
   question String
 
-  type QuestionType
+  type String // Changed to String for SQLite compatibility
 
-  options Json? // only used for MCQ
+  options String? // Changed to String (JSON stored as string) for SQLite compatibility
 
   answer String
   marks  Float
@@ -191,22 +169,18 @@ model Question {
   round Round @relation(fields: [roundId], references: [id])
 }
 
-////////////////////
-// SUBMISSIONS
-////////////////////
-
 model Submission {
   id String @id @default(cuid())
 
   roundId String
 
-  userId        String? // ⭐ NEW
-  applicationId String? // ⭐ make optional
+  userId        String?
+  applicationId String?
 
-  status SubmissionStatus @default(NOT_STARTED)
+  status String @default("NOT_STARTED") // Changed to String for SQLite compatibility
 
   score     Float?
-  responses Json?
+  responses String? // Changed to String (JSON stored as string) for SQLite compatibility
 
   user        User?        @relation(fields: [userId], references: [id])
   application Application? @relation(fields: [applicationId], references: [id])
@@ -217,5 +191,5 @@ model Submission {
   createdAt DateTime @default(now())
 
   @@unique([applicationId, roundId])
-  @@unique([userId, roundId]) // ⭐ prevents duplicate COMMON submissions
+  @@unique([userId, roundId])
 }

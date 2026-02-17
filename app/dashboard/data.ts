@@ -44,10 +44,13 @@ export async function getDashboardData(userId: string) {
 			r.scope === "DOMAIN" && r.domain !== null,
 	);
 
-	const roundsByDomain = Object.groupBy(
-		domainRounds,
-		(r) => r.domain,
-	) as Record<Domain, Round[]>;
+	const roundsByDomain = domainRounds.reduce((acc, r) => {
+		if (!acc[r.domain]) {
+			acc[r.domain] = [];
+		}
+		acc[r.domain].push(r);
+		return acc;
+	}, {} as Record<Domain, Round[]>);
 
 	return {
 		applications: typedApplications,
