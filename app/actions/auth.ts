@@ -7,35 +7,73 @@ import { redirect } from "next/navigation";
 
 type AuthState = {
 	error?: string;
+	success?: boolean;
+	redirectTo?: string;
 };
 
 export async function signup(
 	prevState: AuthState,
 	formData: FormData,
 ): Promise<AuthState> {
-	const name = formData.get("name") as string;
-	const email = formData.get("email") as string;
-	const password = formData.get("password") as string;
+	try {
+		const step = formData.get("step");
 
-	if (!email || !password) {
-		return { error: "Missing fields" };
+		if (step === "step1") {
+			const email = formData.get("email") as string;
+			const password = formData.get("password") as string;
+
+			if (!email || !password) {
+				return { error: "Missing required fields" };
+			}
+
+			return { success: true };
+		}
+
+		const name = formData.get("name") as string;
+		const email = formData.get("email") as string;
+		const password = formData.get("password") as string;
+
+		const rollNumber = formData.get("rollNumber") as string;
+		const mobile = formData.get("mobile") as string;
+		const institution = formData.get("institution") as any;
+		const year = formData.get("year") as any;
+		const branch = formData.get("branch") as any;
+
+		if (!email || !password || !rollNumber || !mobile) {
+			return { error: "Please fill all required fields" };
+		}
+
+		const existing = await prisma.user.findUnique({ where: { email } });
+
+		if (existing) {
+			return { error: "Email already in use" };
+		}
+
+		const hashed = await bcrypt.hash(password, 10);
+
+		const user = await prisma.user.create({
+			data: {
+				name,
+				email,
+				password: hashed,
+				profile: {
+					create: {
+						rollNumber,
+						mobile,
+						institution,
+						year,
+						branch,
+					},
+				},
+			},
+		});
+
+		await createSession(user.id, user.role);
+
+		return { success: true, redirectTo: "/dashboard" };
+	} catch {
+		return { error: "Something went wrong. Please try again." };
 	}
-
-	const existing = await prisma.user.findUnique({ where: { email } });
-
-	if (existing) {
-		return { error: "Email already in use" };
-	}
-
-	const hashed = await bcrypt.hash(password, 10);
-
-	const user = await prisma.user.create({
-		data: { name, email, password: hashed },
-	});
-
-	await createSession(user.id, user.role);
-
-	redirect("/dashboard");
 }
 
 // Updated login action

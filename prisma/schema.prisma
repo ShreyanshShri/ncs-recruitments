@@ -54,6 +54,31 @@ enum RoundScope {
   DOMAIN
 }
 
+enum Institution {
+  AKTU
+  JSSUNI
+}
+
+enum Year {
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+}
+
+enum Branch {
+  CSE
+  CSE_AIML
+  CSE_DS
+  IT
+  ECE
+  MECHANICAL
+  RAI
+  EEE
+  EE
+  CIVIL
+}
+
 ////////////////////
 // AUTH
 ////////////////////
@@ -70,7 +95,26 @@ model User {
   createdAt   DateTime     @default(now())
   submissions Submission[]
 
+  profile UserProfile?
+
   @@map("users")
+}
+
+model UserProfile {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rollNumber String
+  mobile     String
+
+  institution Institution
+  year        Year
+  branch      Branch
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 ////////////////////
