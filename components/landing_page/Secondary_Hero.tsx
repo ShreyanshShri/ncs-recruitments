@@ -10,8 +10,8 @@ const Secondary_Hero = () => {
 				<WindScene particle_count={180} contrast={true} />
 				<div className="relative z-20 space-y-6">
 					{/* MAIN TITLE */}
-					<h1 className="font-shuriken text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-beige tracking-wide">
-						NIBBLE COMPUTING SOCIETY
+					<h1 className="font-shuriken text-4xl sm:text-5xl md:text-6xl lg:text-7xltracking-wide bg-linear-to-b from-primary-red to-beige/85 bg-clip-text text-transparent">
+						NIBBLE COMPUTER SOCIETY
 					</h1>
 
 					{/* ACCENT LINE */}

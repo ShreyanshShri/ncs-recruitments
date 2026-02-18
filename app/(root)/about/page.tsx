@@ -5,7 +5,7 @@ const Page = () => {
 			<section className="bg-bg-dark text-beige py-24 px-6 text-center">
 				<div className="max-w-5xl mx-auto space-y-6">
 					<h1 className="font-shuriken text-primary-red text-4xl sm:text-6xl tracking-wider">
-						NIBBLE COMPUTING SOCIETY
+						NIBBLE COMPUTER SOCIETY
 					</h1>
 
 					<p className="text-lg sm:text-xl text-light-beige">
@@ -22,11 +22,10 @@ const Page = () => {
 					<h2 className="font-shuriken text-3xl text-dark-red">Who We Are</h2>
 
 					<p>
-						Nibble Computing Society is a student driven technical community
-						that represents the academic and innovative spirit of the
-						department. It is a space where curiosity is converted into systems,
-						ideas become projects, and learning extends far beyond the
-						classroom.
+						Nibble Computer Society is a student driven technical community that
+						represents the academic and innovative spirit of the department. It
+						is a space where curiosity is converted into systems, ideas become
+						projects, and learning extends far beyond the classroom.
 					</p>
 
 					<p>
@@ -96,7 +95,7 @@ const Page = () => {
 					</h2>
 
 					<p className="text-light-beige text-lg">
-						Since 2000, Nibble Computing Society has remained a place for
+						Since 2000, Nibble Computer Society has remained a place for
 						students who want to build, explore, and lead. It is not defined by
 						events or titles, but by the people who choose to put in the work
 						and move the community forward.

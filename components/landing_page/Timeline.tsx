@@ -53,15 +53,25 @@ export default function Timeline() {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
+					const el = entry.target as HTMLElement;
+
 					if (entry.isIntersecting) {
-						entry.target.classList.remove("opacity-0", "translate-y-10");
+						el.classList.remove("opacity-0", "translate-y-10");
+						el.classList.add("opacity-100", "translate-y-0");
+					} else {
+						el.classList.add("opacity-0", "translate-y-10");
+						el.classList.remove("opacity-100", "translate-y-0");
 					}
 				});
 			},
-			{ threshold: 0.2 },
+			{
+				threshold: 1, // control when it triggers
+			},
 		);
 
 		refs.current.forEach((ref) => ref && observer.observe(ref));
+
+		return () => observer.disconnect();
 	}, []);
 
 	/* progress index logic */

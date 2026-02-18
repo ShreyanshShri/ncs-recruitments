@@ -12,7 +12,7 @@ const Clubs = () => {
 				<h2 className="text-4xl font-shuriken tracking-widest text-primary-red">
 					OUR CLUBS
 				</h2>
-				<p className="mt-5 text-lg font-bold font-sans max-w-4xl  mx-auto text-lightBeige/70 leading-relaxed">
+				<p className="mt-5 text-sm max-w-4xl  mx-auto text-lightBeige/70 leading-relaxed font-shuriken letter tracking-wider">
 					Discover specialized communities where innovation meets creativity.
 					Learn, build, and grow together through hands-on projects and
 					real-world problem solving.
