@@ -43,3 +43,6 @@ next-env.d.ts
 .vscode/
 
 /app/generated/
+
+# docker
+docker-compose.yml

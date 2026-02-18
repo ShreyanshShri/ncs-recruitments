@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 const items = [
 	{
-		date: "22 Feb 2026",
+		date: "23 Feb 2026",
 		title: "Round 1 – Online MCQ",
 		desc: "First Year • Aptitude + Club MCQs",
 		status: "active",
@@ -145,9 +145,8 @@ export default function Timeline() {
 								ref={(el) => {
 									refs.current[i] = el;
 								}}
-								className={`relative flex items-center ${
-									i % 2 === 0 ? "justify-start" : "justify-end"
-								} opacity-0 translate-y-10 transition-all duration-700`}
+								className={`relative flex items-center ${i % 2 === 0 ? "justify-start" : "justify-end"
+									} opacity-0 translate-y-10 transition-all duration-700`}
 							>
 								{/* dot */}
 								<div
@@ -158,11 +157,10 @@ export default function Timeline() {
 								{/* card */}
 								<div
 									className={`w-[45%] p-6 rounded-xl shadow-xl transition hover:scale-105
-									${
-										isActive
+									${isActive
 											? "bg-beige text-bg-dark border-primary-red border-2"
 											: "bg-deep-brown text-beige border-border-red border"
-									}`}
+										}`}
 								>
 									<p className="text-sm mb-1 font-bold text-primary-red">
 										{item.date}
@@ -171,9 +169,8 @@ export default function Timeline() {
 									<h3 className="text-xl mb-2 font-bold">{item.title}</h3>
 
 									<p
-										className={`text-md ${
-											isActive ? "text-bg-dark/80" : "text-beige/80"
-										}`}
+										className={`text-md ${isActive ? "text-bg-dark/80" : "text-beige/80"
+											}`}
 									>
 										{item.desc}
 									</p>
