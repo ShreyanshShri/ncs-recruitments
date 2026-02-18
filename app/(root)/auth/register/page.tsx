@@ -22,7 +22,7 @@ export default function SignupForm() {
 	const [step1Data, setStep1Data] = useState({
 		name: "",
 		email: "",
-		password: "",
+		dob: "",
 	});
 
 	useEffect(() => {
@@ -73,14 +73,12 @@ export default function SignupForm() {
 							/>
 
 							<input
-								name="password"
-								type="password"
-								placeholder="Password"
-								required
+								type="date"
+								placeholder="Date of Birth"
 								className={inputStyle}
-								value={step1Data.password}
+								value={step1Data.dob}
 								onChange={(e) =>
-									setStep1Data({ ...step1Data, password: e.target.value })
+									setStep1Data({ ...step1Data, dob: e.target.value })
 								}
 							/>
 
@@ -99,7 +97,7 @@ export default function SignupForm() {
 						<>
 							<input type="hidden" name="name" value={step1Data.name} />
 							<input type="hidden" name="email" value={step1Data.email} />
-							<input type="hidden" name="password" value={step1Data.password} />
+							<input type="hidden" name="password" value={step1Data.dob} />
 
 							<input
 								name="rollNumber"
@@ -124,8 +122,8 @@ export default function SignupForm() {
 								<option value="">Year</option>
 								<option value="FIRST">1st</option>
 								<option value="SECOND">2nd</option>
-								<option value="THIRD">3rd</option>
-								<option value="FOURTH">4th</option>
+								{/* <option value="THIRD">3rd</option>
+								<option value="FOURTH">4th</option> */}
 							</select>
 
 							<select name="branch" required className={inputStyle}>

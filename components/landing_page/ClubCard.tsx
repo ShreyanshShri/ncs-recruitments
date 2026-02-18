@@ -45,7 +45,7 @@ export default function ClubCard({
 						{title}
 					</h3>
 
-					<p className="text-[12px] text-light-beige/70 leading-relaxed font-light font-shuriken tracking-widest">
+					<p className="text-[16px] text-light-beige/70 leading-relaxed font-sant tracking-wide">
 						{description}
 					</p>
 				</div>

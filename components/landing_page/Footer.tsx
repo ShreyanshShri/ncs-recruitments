@@ -1,9 +1,11 @@
+import Link from "next/link";
+
 export default function Footer() {
 	return (
 		<footer className="bg-beige text-bg-dark font-shuriken border-t border-border-red">
 			<div className="max-w-7xl mx-auto px-6 py-16">
 				{/* TOP GRID */}
-				<div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+				<div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
 					{/* BRAND */}
 					<div>
 						<h2 className="text-2xl text-primary-red mb-4">HackNCS</h2>
@@ -20,19 +22,19 @@ export default function Footer() {
 						</h3>
 						<ul className="space-y-2 text-sm">
 							<li>
-								<a href="#" className="hover:text-primary-red">
+								<Link href="/#" className="hover:text-primary-red">
 									Home
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="#timeline" className="hover:text-primary-red">
+								<Link href="/#timeline" className="hover:text-primary-red">
 									Timeline
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="#domains" className="hover:text-primary-red">
+								<Link href="/#domains" className="hover:text-primary-red">
 									Domains
-								</a>
+								</Link>
 							</li>
 							<li>
 								<a
@@ -46,7 +48,7 @@ export default function Footer() {
 					</div>
 
 					{/* RESOURCES */}
-					<div>
+					{/* <div>
 						<h3 className="text-primary-red mb-4 text-sm tracking-wider">
 							Resources
 						</h3>
@@ -56,7 +58,7 @@ export default function Footer() {
 									Apply
 								</a>
 							</li>
-							{/* <li>
+							<li>
 								<a href="#" className="hover:text-primary-red">
 									Guidelines
 								</a>
@@ -65,7 +67,7 @@ export default function Footer() {
 								<a href="#" className="hover:text-primary-red">
 									FAQs
 								</a>
-							</li> */}
+							</li>
 							<li>
 								<a
 									href="https://hackncs.in/team"
@@ -75,20 +77,22 @@ export default function Footer() {
 								</a>
 							</li>
 						</ul>
-					</div>
+					</div> */}
 
 					{/* CTA */}
 					<div>
 						<h3 className="text-primary-red mb-4 text-sm tracking-wider">
-							Join Us
+							Join Our Open Community
 						</h3>
 						<p className="text-sm mb-4 text-bg-dark/70">
-							Become a part of the core team and shape the future.
+							Become a part of the HackNCS community on Whatsapp.
 						</p>
 
-						<button className="bg-primary-red text-light-beige px-5 py-2 rounded-lg hover:bg-dark-red transition">
-							Apply Now
-						</button>
+						<a href="https://chat.whatsapp.com/IrXRGb7JXpKFwXJfW8NMq8">
+							<button className="bg-primary-red text-light-beige px-5 py-2 rounded-lg hover:bg-dark-red transition">
+								JOIN NOW
+							</button>
+						</a>
 					</div>
 				</div>
 

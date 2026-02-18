@@ -11,6 +11,11 @@ type AuthState = {
 	redirectTo?: string;
 };
 
+function dobToPassword(dob: string) {
+	const [year, month, day] = dob.split("-");
+	return `${day}${month}${year}`;
+}
+
 export async function signup(
 	prevState: AuthState,
 	formData: FormData,
@@ -20,9 +25,9 @@ export async function signup(
 
 		if (step === "step1") {
 			const email = formData.get("email") as string;
-			const password = formData.get("password") as string;
+			const dob = formData.get("password") as string;
 
-			if (!email || !password) {
+			if (!email || !dob) {
 				return { error: "Missing required fields" };
 			}
 
@@ -31,7 +36,7 @@ export async function signup(
 
 		const name = formData.get("name") as string;
 		const email = formData.get("email") as string;
-		const password = formData.get("password") as string;
+		const rawDob = formData.get("password") as string;
 
 		const rollNumber = formData.get("rollNumber") as string;
 		const mobile = formData.get("mobile") as string;
@@ -39,15 +44,14 @@ export async function signup(
 		const year = formData.get("year") as any;
 		const branch = formData.get("branch") as any;
 
-		if (!email || !password || !rollNumber || !mobile) {
+		if (!email || !rawDob || !rollNumber || !mobile) {
 			return { error: "Please fill all required fields" };
 		}
 
-		const existing = await prisma.user.findUnique({ where: { email } });
+		const password = dobToPassword(rawDob);
 
-		if (existing) {
-			return { error: "Email already in use" };
-		}
+		const existing = await prisma.user.findUnique({ where: { email } });
+		if (existing) return { error: "Email already in use" };
 
 		const hashed = await bcrypt.hash(password, 10);
 
@@ -57,13 +61,7 @@ export async function signup(
 				email,
 				password: hashed,
 				profile: {
-					create: {
-						rollNumber,
-						mobile,
-						institution,
-						year,
-						branch,
-					},
+					create: { rollNumber, mobile, institution, year, branch },
 				},
 			},
 		});

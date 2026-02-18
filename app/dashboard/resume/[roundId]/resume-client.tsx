@@ -9,6 +9,8 @@ type State = {
 	error?: string;
 };
 
+const MAX_SIZE = 200 * 1024; // 200KB
+
 export default function ResumeClient({
 	roundId,
 	existingResumeUrl,
@@ -22,18 +24,18 @@ export default function ResumeClient({
 		saveResume.bind(null, roundId),
 		{},
 	);
+
 	const [fileName, setFileName] = useState<string | null>(null);
+	const [uploadError, setUploadError] = useState<string | null>(null);
 
 	return (
 		<div className="min-h-screen bg-bg-dark text-beige px-6 py-12">
 			<div className="max-w-xl mx-auto space-y-8">
-				{/* Heading */}
 				<h1 className="text-3xl font-shuriken text-primary-red text-center tracking-wide">
 					Upload Resume
 				</h1>
 
 				<div className="bg-light-beige text-bg-dark border border-border-red rounded-2xl p-8 space-y-6 shadow-lg">
-					{/* ✅ Already submitted */}
 					{alreadySubmitted ? (
 						<div className="space-y-3 text-center">
 							<p className="font-semibold text-green-700">PDF submitted</p>
@@ -41,7 +43,7 @@ export default function ResumeClient({
 							<a
 								href={existingResumeUrl!}
 								target="_blank"
-								className="underline cursor-pointer inline-block text-sm font-shuriken tracking-wide text-primary-red hover:text-dark-red transition"
+								className="underline text-sm font-shuriken tracking-wide text-primary-red hover:text-dark-red transition"
 							>
 								View uploaded resume
 							</a>
@@ -50,41 +52,59 @@ export default function ResumeClient({
 						<form action={formAction} className="space-y-6">
 							<input type="hidden" name="resumeUrl" id="resumeUrl" />
 
-							{/* Upload button */}
+							{/* Upload */}
 							<CldUploadWidget
 								uploadPreset="ncs_resume"
 								options={{
 									resourceType: "raw",
 									clientAllowedFormats: ["pdf"],
-									maxFileSize: 5_000_000,
+									maxFileSize: MAX_SIZE,
 									folder: "ncs/resumes",
 								}}
 								onSuccess={(result: any) => {
-									const url = result?.info?.secure_url;
+									setUploadError(null);
+
+									const info = result?.info;
+
+									if (info?.bytes > MAX_SIZE) {
+										setFileName(null);
+										setUploadError("File must be less than 200KB");
+										return;
+									}
+
+									const url = info?.secure_url;
+									const name = info?.original_filename;
+
 									const input = document.getElementById(
 										"resumeUrl",
 									) as HTMLInputElement;
-									const name = result?.info?.original_filename;
 
 									if (input && url) input.value = url;
 									if (name) setFileName(`${name}.pdf`);
+								}}
+								onError={() => {
+									setFileName(null);
+									setUploadError("Upload failed. Try again.");
 								}}
 							>
 								{({ open }) => (
 									<button
 										type="button"
 										onClick={() => open()}
-										className="cursor-pointer w-full border border-border-red text-dark-red font-shuriken tracking-wide py-3 rounded-xl hover:bg-primary-red hover:text-light-beige transition"
+										className="w-full border border-border-red text-dark-red font-shuriken tracking-wide py-3 rounded-xl hover:bg-primary-red hover:text-light-beige transition"
 									>
 										{fileName ?? "Select PDF"}
 									</button>
 								)}
 							</CldUploadWidget>
 
-							{/* Submit */}
+							<p className="text-xs text-center text-gray-600">
+								PDF only • Max size: 200KB
+							</p>
+
 							<button
 								type="submit"
-								disabled={pending}
+								disabled={pending || !fileName}
 								className="w-full bg-primary-red hover:bg-dark-red text-beige font-shuriken tracking-wide py-3 rounded-xl transition disabled:opacity-50"
 							>
 								{pending ? "Saving..." : "Submit"}
@@ -93,13 +113,21 @@ export default function ResumeClient({
 					)}
 				</div>
 
-				{/* Messages */}
+				{/* Client upload error */}
+				{uploadError && (
+					<p className="text-primary-red text-sm text-center font-medium">
+						{uploadError}
+					</p>
+				)}
+
+				{/* Server error */}
 				{state?.error && (
 					<p className="text-primary-red text-sm text-center font-medium">
 						{state.error}
 					</p>
 				)}
 
+				{/* Success */}
 				{state?.success && !alreadySubmitted && (
 					<p className="text-green-700 text-sm text-center font-medium">
 						Resume uploaded successfully.

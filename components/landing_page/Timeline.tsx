@@ -2,9 +2,33 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// type Status = "completed" | "active" | "upcoming";
+type Status = "active" | "completed" | "upcoming" | "pending";
 
-const items = [
+const statusStyles: Record<Status, { label: string; class: string }> = {
+	active: {
+		label: "Active",
+		class: "bg-primary-red text-beige border border-primary-red",
+	},
+	completed: {
+		label: "Completed",
+		class: "bg-beige text-bg-dark border border-beige",
+	},
+	upcoming: {
+		label: "Upcoming",
+		class: "bg-transparent text-beige border border-border-red",
+	},
+	pending: {
+		label: "Pending",
+		class: "bg-transparent text-beige/80 border border-border-red",
+	},
+} as const;
+
+const items: {
+	date: string;
+	title: string;
+	desc: string;
+	status: Status;
+}[] = [
 	{
 		date: "23 Feb 2026",
 		title: "Round 1 – Online MCQ",
@@ -114,10 +138,10 @@ export default function Timeline() {
 				<h2 className="text-3xl text-primary-red font-shuriken">
 					Event Timeline
 				</h2>
-				<p className="text-beige/80 text-sm font-shuriken tracking-wider">
+				<p className="text-beige/80 text-lg font-sans tracking-wider font-bold">
 					23–25 Feb 2026 • 4:45–6:45 PM
 				</p>
-				<p className="text-primary-red text-sm font-shuriken tracking-wider">
+				<p className="text-primary-red text-lg font-sans font-bold tracking-wider">
 					AB1 Computer Centre — Labs 1,2,3,4
 				</p>
 			</div>
@@ -145,8 +169,9 @@ export default function Timeline() {
 								ref={(el) => {
 									refs.current[i] = el;
 								}}
-								className={`relative flex items-center ${i % 2 === 0 ? "justify-start" : "justify-end"
-									} opacity-0 translate-y-10 transition-all duration-700`}
+								className={`relative flex items-center ${
+									i % 2 === 0 ? "justify-start" : "justify-end"
+								} opacity-0 translate-y-10 transition-all duration-700`}
 							>
 								{/* dot */}
 								<div
@@ -157,20 +182,31 @@ export default function Timeline() {
 								{/* card */}
 								<div
 									className={`w-[45%] p-6 rounded-xl shadow-xl transition hover:scale-105
-									${isActive
+									${
+										isActive
 											? "bg-beige text-bg-dark border-primary-red border-2"
 											: "bg-deep-brown text-beige border-border-red border"
-										}`}
+									}`}
 								>
-									<p className="text-sm mb-1 font-bold text-primary-red">
-										{item.date}
-									</p>
+									<div className="flex items-center justify-between mb-2 gap-3">
+										<p className="text-sm font-bold text-primary-red">
+											{item.date}
+										</p>
+
+										<span
+											className={`text-xs px-2.5 py-1 rounded-full font-semibold tracking-wide whitespace-nowrap
+		${statusStyles[item.status].class}`}
+										>
+											{statusStyles[item.status].label}
+										</span>
+									</div>
 
 									<h3 className="text-xl mb-2 font-bold">{item.title}</h3>
 
 									<p
-										className={`text-md ${isActive ? "text-bg-dark/80" : "text-beige/80"
-											}`}
+										className={`text-md ${
+											isActive ? "text-bg-dark/80" : "text-beige/80"
+										}`}
 									>
 										{item.desc}
 									</p>

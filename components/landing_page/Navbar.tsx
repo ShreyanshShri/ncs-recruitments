@@ -18,14 +18,16 @@ export default function Navbar({ isPlaying, toggleMusic }: NavbarProps) {
 		<nav className="fixed top-0 left-0 w-full z-30">
 			<div className="flex items-center justify-between px-6 py-4 bg-black/20 backdrop-blur-sm">
 				{/* LOGO */}
-				<Image
-					src={ncsLogo}
-					alt="NCS Logo"
-					height={40}
-					width={160}
-					className="h-10 w-auto object-contain"
-					priority
-				/>
+				<Link href="/">
+					<Image
+						src={ncsLogo}
+						alt="NCS Logo"
+						height={40}
+						width={160}
+						className="h-10 w-auto object-contain"
+						priority
+					/>
+				</Link>
 
 				{/* DESKTOP MENU */}
 				<ul className="hidden md:flex items-center gap-10 text-beige text-sm tracking-widest">
@@ -63,16 +65,18 @@ export default function Navbar({ isPlaying, toggleMusic }: NavbarProps) {
 
 			{/* MOBILE MENU */}
 			<div
-				className={`md:hidden transition-all duration-300 overflow-hidden ${open ? "max-h-60" : "max-h-0"
-					} bg-bg-dark/95 backdrop-blur-lg`}
+				className={`md:hidden transition-all duration-300 overflow-hidden ${
+					open ? "max-h-60" : "max-h-0"
+				} bg-bg-dark/95 backdrop-blur-lg`}
 			>
 				<ul className="flex flex-col items-center gap-6 py-6 text-beige text-sm tracking-widest">
-					<li
-						onClick={() => setOpen(false)}
+					<a
+						// onClick={() => setOpen(false)}
+						href="https://hackncs.in"
 						className="font-shuriken hover:text-primary-red transition cursor-pointer"
 					>
 						ABOUT US
-					</li>
+					</a>
 
 					<Link
 						href="/auth/register"

@@ -17,9 +17,33 @@ export function RoundCard({ round }: Props) {
 			<div className="space-y-1 text-sm font-medium text-bg-dark/80">
 				<p>Type: {round.type}</p>
 
-				{round.startTime && <p>Starts: {round.startTime.toLocaleString()}</p>}
+				{round.startTime && (
+					<p>
+						Starts:{" "}
+						{new Date(round.startTime).toLocaleString("en-GB", {
+							day: "2-digit",
+							month: "2-digit",
+							year: "numeric",
+							hour: "2-digit",
+							minute: "2-digit",
+							hour12: true,
+						})}
+					</p>
+				)}
 
-				{round.endTime && <p>Ends: {round.endTime.toLocaleString()}</p>}
+				{round.endTime && (
+					<p>
+						Ends:{" "}
+						{new Date(round.endTime).toLocaleString("en-GB", {
+							day: "2-digit",
+							month: "2-digit",
+							year: "numeric",
+							hour: "2-digit",
+							minute: "2-digit",
+							hour12: true,
+						})}
+					</p>
+				)}
 			</div>
 
 			{/* ACTIONS */}

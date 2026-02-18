@@ -1,5 +1,6 @@
 import bgImage from "@/assets/bg-secondary.png";
 import WindScene from "./WindScene";
+import Link from "next/link";
 
 const Secondary_Hero = () => {
 	return (
@@ -29,6 +30,12 @@ const Secondary_Hero = () => {
 						We Design, We Code, We Develop
 						<span className="block mt-4">Since 2000</span>
 					</p>
+
+					<Link href="/auth/register">
+						<button className="text-primary-red bg-beige px-5 py-2 rounded-lg hover:bg-beige/80 cursor-pointer font-shuriken mt-4">
+							JOIN NOW
+						</button>
+					</Link>
 				</div>
 			</section>
 		</>

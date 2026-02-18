@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 // import { Inter } from "next/font/google";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import { IntroProvider } from "@/providers/landing-page/intro-provider";
 
 // Configure The Last Shuriken font
 const lastShuriken = localFont({
@@ -33,7 +34,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className={`${roboto.variable} ${lastShuriken.variable}`}>
-			<body className="font-sans antialiased">{children}</body>
+			<body className="font-sans antialiased">
+				<IntroProvider>{children}</IntroProvider>
+			</body>
 		</html>
 	);
 }

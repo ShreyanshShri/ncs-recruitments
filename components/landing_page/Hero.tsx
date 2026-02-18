@@ -37,16 +37,19 @@ const Hero = ({ setLoadSite }: { setLoadSite: any }) => {
 					backgroundRepeat: "no-repeat",
 				}}
 			>
+				{/* Dark Overlay for cinematic feel */}
+				<div className="absolute inset-0 bg-black/10"></div>
+
 				<Image
 					src={NcsLogo.src}
 					width={80}
 					height={80}
 					alt="NCS Logo"
-					className="absolute top-4 left-4"
+					className="
+		absolute top-6 left-1/2 -translate-x-1/2
+drop-shadow-[0_0_15px_rgba(212,175,55,1)]
+	"
 				/>
-				{/* Dark Overlay for cinematic feel */}
-				<div className="absolute inset-0 bg-black/10"></div>
-
 				{/* Content */}
 				<div className="absolute top-[18%] lg:top-[20%] left-1/2 -translate-x-1/2 text-center">
 					<h1 className="font-shuriken text-bd-dark text-4xl sm:text-4xl lg:text-[36px] xl:text-5xl tracking-wider drop-shadow-[0_5px_15px_rgba(212,175,55,0.9)]">
