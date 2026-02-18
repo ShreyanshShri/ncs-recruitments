@@ -1,7 +1,7 @@
 const Temp = () => {
 	return (
 		<div id="Temp">
-			<div className="bg-gradient-to-r from-primary-red/20 via-primary-red/10 to-transparent backdrop-blur-sm border border-primary-red/30 rounded-3xl p-12 space-y-6">
+			<div className="bg-linear-to-r from-primary-red/20 via-primary-red/10 to-transparent backdrop-blur-sm border border-primary-red/30 rounded-3xl p-12 space-y-6">
 				<div className="space-y-3">
 					<h2 className="text-3xl font-shuriken text-beige">
 						Join Our Recruitment Drive
@@ -43,7 +43,7 @@ const Temp = () => {
 					].map((item, idx) => (
 						<div
 							key={idx}
-							className="bg-gradient-to-br from-beige/10 to-beige/5 backdrop-blur-sm border border-beige/20 rounded-2xl p-8 text-center hover:border-primary-red/50 transition-all duration-300"
+							className="bg-linear-to-br from-beige/10 to-beige/5 backdrop-blur-sm border border-beige/20 rounded-2xl p-8 text-center hover:border-primary-red/50 transition-all duration-300"
 						>
 							<p className="text-4xl font-shuriken text-primary-red mb-2">
 								{item.stat}

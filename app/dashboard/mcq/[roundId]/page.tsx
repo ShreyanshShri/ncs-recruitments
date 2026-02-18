@@ -27,7 +27,7 @@ export default async function McqPage({
 
 					<Link
 						href="/dashboard"
-						className="underline inline-block mt-2 text-primary-red font-shuriken tracking-wide hover:text-dark-red transition"
+						className="underline cursor-pointer inline-block mt-2 text-primary-red font-shuriken tracking-wide hover:text-dark-red transition"
 					>
 						Return to Dashboard
 					</Link>

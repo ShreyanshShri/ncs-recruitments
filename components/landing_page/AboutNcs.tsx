@@ -8,15 +8,15 @@ const AboutNcs = () => {
 					</h2>
 					<p className="text-bg-dark text-lg max-w-2xl mx-auto">
 						Join the leading tech community at JSS dedicated to fostering
-						innovation and excellence
+						innovation and excellence.
 					</p>
 				</div>
 
 				<div className="grid md:grid-cols-3 gap-6">
 					{[
-						{ stat: "500+", label: "Active Members" },
-						{ stat: "50+", label: "Projects Completed" },
-						{ stat: "100%", label: "Success Rate" },
+						{ stat: "Legacy", label: "Built on Years of Technical Excellence" },
+						{ stat: "Culture", label: "Focused on Growth & Collaboration" },
+						{ stat: "Impact", label: "From Learning to Real-World Solutions" },
 					].map((item, idx) => (
 						<div
 							key={idx}

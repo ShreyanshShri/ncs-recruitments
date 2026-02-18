@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import { saveResume } from "@/app/actions/resume";
 
@@ -22,6 +22,7 @@ export default function ResumeClient({
 		saveResume.bind(null, roundId),
 		{},
 	);
+	const [fileName, setFileName] = useState<string | null>(null);
 
 	return (
 		<div className="min-h-screen bg-bg-dark text-beige px-6 py-12">
@@ -40,7 +41,7 @@ export default function ResumeClient({
 							<a
 								href={existingResumeUrl!}
 								target="_blank"
-								className="inline-block text-sm font-shuriken tracking-wide text-primary-red hover:text-dark-red transition"
+								className="underline cursor-pointer inline-block text-sm font-shuriken tracking-wide text-primary-red hover:text-dark-red transition"
 							>
 								View uploaded resume
 							</a>
@@ -63,17 +64,19 @@ export default function ResumeClient({
 									const input = document.getElementById(
 										"resumeUrl",
 									) as HTMLInputElement;
+									const name = result?.info?.original_filename;
 
 									if (input && url) input.value = url;
+									if (name) setFileName(`${name}.pdf`);
 								}}
 							>
 								{({ open }) => (
 									<button
 										type="button"
 										onClick={() => open()}
-										className="w-full border border-border-red text-dark-red font-shuriken tracking-wide py-3 rounded-xl hover:bg-beige/40 transition"
+										className="cursor-pointer w-full border border-border-red text-dark-red font-shuriken tracking-wide py-3 rounded-xl hover:bg-primary-red hover:text-light-beige transition"
 									>
-										Select PDF
+										{fileName ?? "Select PDF"}
 									</button>
 								)}
 							</CldUploadWidget>

@@ -81,7 +81,7 @@ export function ClubsTimeline() {
 				{/* Timeline Container */}
 				<div className="relative">
 					{/* Center Line */}
-					<div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary-red via-primary-red to-transparent"></div>
+					<div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-linear-to-b from-primary-red via-primary-red to-transparent"></div>
 
 					{/* Clubs */}
 					<div className="space-y-12">
@@ -97,7 +97,7 @@ export function ClubsTimeline() {
 										onMouseLeave={() => setActiveClub(null)}
 										className="group cursor-pointer"
 									>
-										<div className="bg-gradient-to-r from-beige/10 to-beige/5 backdrop-blur-sm border border-beige/20 rounded-2xl p-8 hover:border-primary-red/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary-red/20">
+										<div className="bg-linear-to-r from-beige/10 to-beige/5 backdrop-blur-sm border border-beige/20 rounded-2xl p-8 hover:border-primary-red/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary-red/20">
 											<h3 className="text-2xl font-shuriken text-beige mb-3 group-hover:text-primary-red transition-colors">
 												{club.name}
 											</h3>
@@ -111,7 +111,7 @@ export function ClubsTimeline() {
 												<span className="text-xs text-beige/50 uppercase tracking-wider">
 													Hover to learn more
 												</span>
-												<div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-red to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+												<div className="w-8 h-8 rounded-full bg-linear-to-r from-primary-red to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 											</div>
 										</div>
 									</div>

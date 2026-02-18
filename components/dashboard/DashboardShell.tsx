@@ -135,7 +135,7 @@ export default function DashboardShell({ data }: any) {
 									{applications.map((app: any, index: number) => (
 										<div
 											key={index}
-											className="rounded-2xl bg-beige text-bg-dark p-6"
+											className="rounded-2xl bg-beige text-bg-dark p-6 border-2 border-primary-red"
 										>
 											<ApplicationCard type="applied" application={app} />
 										</div>
@@ -154,7 +154,7 @@ export default function DashboardShell({ data }: any) {
 										{availableDomains.map((domain: any) => (
 											<div
 												key={domain}
-												className="rounded-2xl bg-beige text-bg-dark p-6"
+												className="rounded-2xl bg-beige text-bg-dark p-6 border-2 border-primary-red"
 											>
 												<ApplicationCard type="available" domain={domain} />
 											</div>
@@ -178,7 +178,7 @@ export default function DashboardShell({ data }: any) {
 										{commonRounds.map((round: any) => (
 											<div
 												key={round.id}
-												className="rounded-2xl bg-beige text-bg-dark p-6"
+												className="rounded-2xl bg-beige text-bg-dark p-6 border-2 border-primary-red"
 											>
 												<RoundCard round={round} />
 											</div>

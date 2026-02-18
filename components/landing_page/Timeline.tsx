@@ -54,7 +54,10 @@ export default function Timeline() {
 	}, []);
 
 	return (
-		<section className="relative py-24 pt-20 bg-bg-dark text-beige font-shuriken">
+		<section
+			className="relative py-24 pt-20 bg-bg-dark text-beige font-shuriken"
+			id="timeline"
+		>
 			<div className="text-center mb-16 space-y-2">
 				<h2 className="text-3xl text-primary-red">Event Timeline</h2>
 				<p className="text-beige/80 text-sm ">23–25 Feb 2026 • 4:45–6:45 PM</p>

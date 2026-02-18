@@ -25,17 +25,20 @@ export default function Footer() {
 								</a>
 							</li>
 							<li>
-								<a href="#" className="hover:text-primary-red">
+								<a href="#timeline" className="hover:text-primary-red">
 									Timeline
 								</a>
 							</li>
 							<li>
-								<a href="#" className="hover:text-primary-red">
+								<a href="#domains" className="hover:text-primary-red">
 									Domains
 								</a>
 							</li>
 							<li>
-								<a href="#" className="hover:text-primary-red">
+								<a
+									href="https://hackncs.in/team"
+									className="hover:text-primary-red"
+								>
 									Team
 								</a>
 							</li>
@@ -49,11 +52,11 @@ export default function Footer() {
 						</h3>
 						<ul className="space-y-2 text-sm">
 							<li>
-								<a href="#" className="hover:text-primary-red">
+								<a href="/auth/register" className="hover:text-primary-red">
 									Apply
 								</a>
 							</li>
-							<li>
+							{/* <li>
 								<a href="#" className="hover:text-primary-red">
 									Guidelines
 								</a>
@@ -62,9 +65,12 @@ export default function Footer() {
 								<a href="#" className="hover:text-primary-red">
 									FAQs
 								</a>
-							</li>
+							</li> */}
 							<li>
-								<a href="#" className="hover:text-primary-red">
+								<a
+									href="https://hackncs.in/team"
+									className="hover:text-primary-red"
+								>
 									Contact
 								</a>
 							</li>
@@ -92,13 +98,19 @@ export default function Footer() {
 
 					{/* SOCIALS */}
 					<div className="flex gap-5">
-						<a href="#" className="hover:text-primary-red">
+						{/* <a href="#" className="hover:text-primary-red">
 							Twitter
-						</a>
-						<a href="#" className="hover:text-primary-red">
+						</a> */}
+						<a
+							href="https://in.linkedin.com/company/hackncs"
+							className="hover:text-primary-red"
+						>
 							LinkedIn
 						</a>
-						<a href="#" className="hover:text-primary-red">
+						<a
+							href="https://www.instagram.com/hackncs/"
+							className="hover:text-primary-red"
+						>
 							Instagram
 						</a>
 					</div>

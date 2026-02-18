@@ -3,7 +3,7 @@ import { Code2, LayoutDashboard, Palette, BrainCircuit } from "lucide-react";
 
 const Clubs = () => {
 	return (
-		<div className="relative pt-25 px-6 pb-25 bg-beige">
+		<div className="relative pt-25 px-6 pb-25 bg-beige" id="domains">
 			{/* <div
 				className="relative pt-25 px-6 pb-25"
 				style={{ backgroundColor: "#422017", color: "beige" }}

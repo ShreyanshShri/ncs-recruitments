@@ -17,7 +17,7 @@ export default function ClubCard({
 		<div className="group relative rounded-2xl p-px transition duration-500 hover:-translate-y-3 will-change-transform">
 			{/* Gradient Border */}
 			<div
-				className={`absolute inset-0 rounded-2xl bg-gradient-to-b ${gradient}`}
+				className={`absolute inset-0 rounded-2xl bg-linear-to-b ${gradient}`}
 			/>
 
 			{/* Card */}
@@ -27,7 +27,7 @@ export default function ClubCard({
 					<div
 						className={`
 							w-20 h-20 rounded-full
-							bg-gradient-to-b ${gradient}
+							bg-linear-to-b ${gradient}
 							flex items-center justify-center
 							shadow-[0_10px_30px_rgba(0,0,0,0.5)]
 							ring-1 ring-white/15
