@@ -5,6 +5,8 @@ import { Menu, X } from "lucide-react";
 import { logout } from "@/app/lib/session";
 import { ApplicationCard } from "@/components/dashboard/ApplicationCard";
 import { RoundCard } from "@/components/dashboard/RoundCard";
+import { ApplySuccessModal } from "@/components/dashboard/ApplySuccessModal";
+import { Domain } from "@/types/db";
 // import WindScene from "../landing_page/WindScene";
 
 type Section = "applications" | "rounds" | "profile";
@@ -44,6 +46,18 @@ export default function DashboardShell({ data }: any) {
 
 	const { applications, availableDomains, commonRounds, roundsByDomain, user } =
 		data;
+
+	const [applyModal, setApplyModal] = useState<{
+		open: boolean;
+		domain: Domain | null;
+	}>({
+		open: false,
+		domain: null,
+	});
+
+	const handleApplyClick = (domain: Domain) => {
+		setApplyModal({ open: true, domain });
+	};
 
 	return (
 		<div className="h-screen flex flex-col text-beige">
@@ -156,7 +170,11 @@ export default function DashboardShell({ data }: any) {
 												key={domain}
 												className="rounded-2xl bg-beige text-bg-dark p-6 border-2 border-primary-red"
 											>
-												<ApplicationCard type="available" domain={domain} />
+												<ApplicationCard
+													type="available"
+													domain={domain}
+													onApplyClick={handleApplyClick}
+												/>
 											</div>
 										))}
 									</div>
@@ -283,6 +301,11 @@ export default function DashboardShell({ data }: any) {
 						</div>
 					)}
 				</main>
+				<ApplySuccessModal
+					open={applyModal.open}
+					domain={applyModal.domain}
+					onClose={() => setApplyModal({ open: false, domain: null })}
+				/>
 			</div>
 		</div>
 	);
