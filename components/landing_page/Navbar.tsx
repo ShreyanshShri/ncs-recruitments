@@ -3,10 +3,15 @@
 import { useState } from "react";
 import Image from "next/image";
 import ncsLogo from "@/assets/ncs-logo.png";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 
-export default function Navbar() {
+interface NavbarProps {
+	isPlaying?: boolean;
+	toggleMusic?: () => void;
+}
+
+export default function Navbar({ isPlaying, toggleMusic }: NavbarProps) {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -40,6 +45,16 @@ export default function Navbar() {
 					</Link>
 				</ul>
 
+				{/* MUSIC TOGGLE */}
+				{toggleMusic && (
+					<button
+						onClick={toggleMusic}
+						className="text-beige hover:text-primary-red transition mr-4 md:mr-0 md:ml-6"
+					>
+						{isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+					</button>
+				)}
+
 				{/* MOBILE TOGGLE */}
 				<button onClick={() => setOpen(!open)} className="md:hidden text-beige">
 					{open ? <X size={26} /> : <Menu size={26} />}
@@ -48,9 +63,8 @@ export default function Navbar() {
 
 			{/* MOBILE MENU */}
 			<div
-				className={`md:hidden transition-all duration-300 overflow-hidden ${
-					open ? "max-h-60" : "max-h-0"
-				} bg-bg-dark/95 backdrop-blur-lg`}
+				className={`md:hidden transition-all duration-300 overflow-hidden ${open ? "max-h-60" : "max-h-0"
+					} bg-bg-dark/95 backdrop-blur-lg`}
 			>
 				<ul className="flex flex-col items-center gap-6 py-6 text-beige text-sm tracking-widest">
 					<li

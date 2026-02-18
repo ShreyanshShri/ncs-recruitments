@@ -71,7 +71,8 @@ export async function signup(
 		await createSession(user.id, user.role);
 
 		return { success: true, redirectTo: "/dashboard" };
-	} catch {
+	} catch (error) {
+		console.error("Signup error:", error);
 		return { error: "Something went wrong. Please try again." };
 	}
 }
