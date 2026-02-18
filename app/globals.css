@@ -2,7 +2,9 @@
 @theme {
 	/* --- Fonts --- */
 	/* This maps 'font-shuriken' to your Next.js localFont variable */
-	--font-shuriken: var(--font-shuriken), sans-serif;
+	/* --font-shuriken: var(--font-shuriken), sans-serif; */
+	--font-sans: var(--font-sans);
+	--font-shuriken: var(--font-shuriken);
 
 	/* --- Colors --- */
 	/* Use camelCase or kebab-case; Tailwind v4 will generate classes 
@@ -32,14 +34,14 @@
 @layer base {
 	body {
 		@apply bg-bg-dark text-light-beige antialiased;
-		font-family: var(--font-shuriken);
+		/* font-family: var(--font-shuriken); */
 	}
 }
 
 /* Optional: Make it the default font for the whole app */
-:root {
+/* :root {
 	font-family: var(--font-shuriken), sans-serif;
-}
+} */
 /* ---break---
   */
 @custom-variant dark (&:is(.dark *));

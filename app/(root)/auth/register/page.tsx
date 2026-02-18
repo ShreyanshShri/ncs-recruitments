@@ -35,9 +35,11 @@ export default function SignupForm() {
 	return (
 		<>
 			<Navbar />
-			<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-shuriken">
+			<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-sans pt-20">
 				<form action={formAction} className="w-full max-w-md space-y-6">
-					<h1 className="text-beige text-3xl text-center">Register</h1>
+					<h1 className="text-beige text-3xl text-center font-shuriken">
+						Register
+					</h1>
 					<StepIndicator step={step} />
 					<input
 						type="hidden"
@@ -85,7 +87,7 @@ export default function SignupForm() {
 							<button
 								type="button"
 								onClick={() => setStep(2)}
-								className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red transition"
+								className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red transition font-shuriken"
 							>
 								NEXT
 							</button>
@@ -144,7 +146,7 @@ export default function SignupForm() {
 								<button
 									type="button"
 									onClick={() => setStep(1)}
-									className="w-full rounded-lg border border-border-red py-3 text-light-beige hover:bg-deep-brown transition"
+									className="w-full rounded-lg border border-border-red py-3 text-light-beige hover:bg-deep-brown transition font-shuriken"
 								>
 									BACK
 								</button>
@@ -152,7 +154,7 @@ export default function SignupForm() {
 								<button
 									type="submit"
 									disabled={isPending}
-									className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition"
+									className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition font-shuriken"
 								>
 									{isPending ? "CREATING ACCOUNT..." : "SIGN UP"}
 								</button>
@@ -161,7 +163,7 @@ export default function SignupForm() {
 					)}
 					<Link
 						href="/auth/login"
-						className="text-beige text-[12px] font-light"
+						className="text-beige text-[12px] font-light font-shuriken"
 					>
 						Already have an account? <span className="underline">Login</span>
 					</Link>

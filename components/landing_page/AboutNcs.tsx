@@ -6,7 +6,7 @@ const AboutNcs = () => {
 					<h2 className="text-4xl font-shuriken text-primary-red">
 						About NCS Community
 					</h2>
-					<p className="text-bg-dark text-lg max-w-2xl mx-auto">
+					<p className="text-bg-dark text-lg max-w-2xl mx-auto  font-sans font-bold">
 						Join the leading tech community at JSS dedicated to fostering
 						innovation and excellence.
 					</p>
@@ -20,7 +20,7 @@ const AboutNcs = () => {
 					].map((item, idx) => (
 						<div
 							key={idx}
-							className="bg-linear-to-br from-primary-red/20 via-primary-red/10 backdrop-blur-sm border border-beige/20 rounded-2xl p-8 text-center hover:border-primary-red/50 transition-all duration-300"
+							className="bg-linear-to-br from-primary-red/20 via-primary-red/10 backdrop-blur-sm border border-beige/20 rounded-2xl p-8 text-center hover:border-primary-red/50 transition-all duration-300 font-sans font-bold"
 						>
 							<p className="text-4xl font-shuriken text-primary-red mb-2">
 								{item.stat}

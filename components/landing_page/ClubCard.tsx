@@ -26,13 +26,13 @@ export default function ClubCard({
 				<div className="absolute -top-10 left-1/2 -translate-x-1/2">
 					<div
 						className={`
-							w-20 h-20 rounded-full
-							bg-linear-to-b ${gradient}
+							w-20 h-20 rounded-full							
 							flex items-center justify-center
 							shadow-[0_10px_30px_rgba(0,0,0,0.5)]
 							ring-1 ring-white/15
 							transition-transform duration-500
 							group-hover:scale-110
+							bg-primary-red
 						`}
 					>
 						<Icon size={34} strokeWidth={2.5} className="text-white" />

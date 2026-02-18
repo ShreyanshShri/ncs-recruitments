@@ -16,9 +16,11 @@ export default function Login() {
 	return (
 		<>
 			<Navbar />
-			<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-shuriken">
+			<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-sans">
 				<form action={action} className="w-full max-w-md space-y-6">
-					<h1 className="text-beige text-3xl text-center">Login</h1>
+					<h1 className="text-beige text-3xl text-center font-shuriken">
+						Login
+					</h1>
 
 					{/* EMAIL */}
 					<input
@@ -49,7 +51,7 @@ export default function Login() {
 					<button
 						type="submit"
 						disabled={isPending}
-						className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition"
+						className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition font-shuriken"
 					>
 						{isPending ? "LOGGING IN..." : "LOGIN"}
 					</button>
@@ -57,7 +59,7 @@ export default function Login() {
 					{/* SWITCH TO REGISTER */}
 					<Link
 						href="/auth/register"
-						className="block text-center text-beige text-xs font-light"
+						className="block text-center text-beige text-xs font-light font-shuriken"
 					>
 						Don’t have an account? <span className="underline">Register</span>
 					</Link>

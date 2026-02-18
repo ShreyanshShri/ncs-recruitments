@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local"; // Import the local loader
+import localFont from "next/font/local";
+// import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 
 // Configure The Last Shuriken font
 const lastShuriken = localFont({
 	src: "./fonts/TheLastShuriken.ttf",
 	variable: "--font-shuriken", // This is the CSS variable you'll use
+});
+
+// const inter = Inter({
+// 	subsets: ["latin"],
+// 	variable: "--font-sans", // important for Tailwind mapping
+// });
+
+const roboto = Roboto({
+	subsets: ["latin"],
+	weight: ["400", "500", "700"], // choose what you need
+	variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -19,14 +32,8 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body
-				/* Apply the font variable to the body */
-				className={`${lastShuriken.variable} font-sans antialiased`}
-				suppressHydrationWarning={true}
-			>
-				{children}
-			</body>
+		<html lang="en" className={`${roboto.variable} ${lastShuriken.variable}`}>
+			<body className="font-sans antialiased">{children}</body>
 		</html>
 	);
 }
