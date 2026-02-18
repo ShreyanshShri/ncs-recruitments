@@ -75,35 +75,49 @@ export async function signup(
 	}
 }
 
+function loginDobToPassword(dob: string) {
+	// if user types 2005-03-14 (from date input)
+	if (dob.includes("-")) {
+		const [day, month, year] = dob.split("-");
+		return `${day}${month}${year}`;
+	}
+	if (dob.includes("/")) {
+		const [day, month, year] = dob.split("/");
+		return `${day}${month}${year}`;
+	}
+
+	// if user types 14032005 manually
+	return dob;
+}
+
 // Updated login action
 export async function login(
-	prevState: AuthState, // Add prevState
+	prevState: AuthState,
 	formData: FormData,
 ): Promise<AuthState> {
 	const email = formData.get("email") as string;
-	const password = formData.get("password") as string;
+	const rawInput = formData.get("password") as string;
 
-	if (!email || !password) {
+	if (!email || !rawInput) {
 		return { error: "Missing fields" };
 	}
 
 	const user = await prisma.user.findUnique({ where: { email } });
 
-	// Using a generic error message for security (don't reveal if email exists)
 	if (!user || !user.password) {
 		return { error: "Invalid email or password" };
 	}
 
+	const password = loginDobToPassword(rawInput);
+
 	const valid = await bcrypt.compare(password, user.password);
+
 	if (!valid) {
 		return { error: "Invalid email or password" };
 	}
 
 	await createSession(user.id, user.role);
 
-	if (user.role === "USER") {
-		redirect("/dashboard");
-	} else {
-		redirect("/admin");
-	}
+	if (user.role === "USER") redirect("/dashboard");
+	else redirect("/admin");
 }

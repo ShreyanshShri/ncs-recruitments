@@ -34,8 +34,8 @@ export default function Login() {
 					{/* PASSWORD */}
 					<input
 						name="password"
-						type="password"
-						placeholder="Password"
+						type="text"
+						placeholder="DOB (DDMMYYYY)"
 						required
 						className={inputStyle}
 					/>
