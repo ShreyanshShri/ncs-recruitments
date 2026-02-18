@@ -3,6 +3,7 @@
 import { prisma } from "@/app/lib/prisma";
 import { requireUser, requireAdmin } from "@/app/lib/auth";
 import { revalidatePath } from "next/cache";
+import { updateResumeUrlByEmail } from "@/app/lib/googleSheets";
 
 type State = {
 	success?: boolean;
@@ -53,6 +54,22 @@ export async function saveResume(
 			status: "SUBMITTED",
 		},
 	});
+
+	const user = await prisma.user.findUnique({
+		where: { id: userId },
+		select: {
+			email: true,
+			profile: { select: { year: true } },
+		},
+	});
+
+	if (user?.profile?.year === "SECOND") {
+		await updateResumeUrlByEmail({
+			sheetName: "registrations_year2",
+			email: user.email,
+			resumeUrl: url,
+		});
+	}
 
 	revalidatePath("/dashboard");
 

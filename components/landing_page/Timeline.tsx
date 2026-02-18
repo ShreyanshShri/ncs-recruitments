@@ -114,10 +114,10 @@ export default function Timeline() {
 				<h2 className="text-3xl text-primary-red font-shuriken">
 					Event Timeline
 				</h2>
-				<p className="text-beige/80 text-lg font-sans">
+				<p className="text-beige/80 text-sm font-shuriken tracking-wider">
 					23–25 Feb 2026 • 4:45–6:45 PM
 				</p>
-				<p className="text-primary-red text-lg font-sans">
+				<p className="text-primary-red text-sm font-shuriken tracking-wider">
 					AB1 Computer Centre — Labs 1,2,3,4
 				</p>
 			</div>
