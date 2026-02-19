@@ -100,6 +100,22 @@ model Submission {
   @@unique([userId, roundId])
 }
 
+model Notification {
+  id    String @id @default(cuid())
+  title String
+  body  String
+
+  year   Year
+  scope  RoundScope
+  domain Domain?
+
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  publishedAt DateTime @default(now())
+
+  @@index([year, scope, domain, isActive])
+}
+
 enum Role {
   USER
   ADMIN

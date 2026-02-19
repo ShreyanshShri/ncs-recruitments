@@ -42,6 +42,13 @@ export enum RoundScope {
 	DOMAIN = "DOMAIN",
 }
 
+export enum Year {
+	FIRST = "FIRST",
+	SECOND = "SECOND",
+	THIRD = "THIRD",
+	FOURTH = "FOURTH",
+}
+
 // Interfaces
 export interface User {
 	id: string;

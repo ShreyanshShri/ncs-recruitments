@@ -92,6 +92,9 @@
 .hero-fade-rise {
 	animation: fadeRise 0.9s ease-out forwards;
 }
+.toast-fade-rise {
+	animation: fadeRise 0.25s ease-out forwards;
+}
 
 /* ===== Custom Scrollbar ===== */
 

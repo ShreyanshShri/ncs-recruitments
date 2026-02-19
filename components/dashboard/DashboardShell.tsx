@@ -7,9 +7,12 @@ import { ApplicationCard } from "@/components/dashboard/ApplicationCard";
 import { RoundCard } from "@/components/dashboard/RoundCard";
 import { ApplySuccessModal } from "@/components/dashboard/ApplySuccessModal";
 import { Domain } from "@/types/db";
+import NotificationToasts, {
+	Toast,
+} from "@/components/common/ToastNotification";
 // import WindScene from "../landing_page/WindScene";
 
-type Section = "applications" | "rounds" | "profile";
+type Section = "applications" | "rounds" | "profile" | "notifications";
 
 const NavButton = ({
 	id,
@@ -44,8 +47,14 @@ export default function DashboardShell({ data }: any) {
 	const [section, setSection] = useState<Section>("applications");
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 
-	const { applications, availableDomains, commonRounds, roundsByDomain, user } =
-		data;
+	const {
+		applications,
+		availableDomains,
+		commonRounds,
+		roundsByDomain,
+		user,
+		notifications,
+	} = data;
 
 	const [applyModal, setApplyModal] = useState<{
 		open: boolean;
@@ -55,6 +64,18 @@ export default function DashboardShell({ data }: any) {
 		open: false,
 		domain: null,
 	});
+
+	const [toasts, setToasts] = useState<Toast[]>(() =>
+		(data.notifications ?? []).map((n: any) => ({
+			id: crypto.randomUUID(),
+			title: n.title,
+			body: n.body,
+		})),
+	);
+
+	const removeToast = (id: string) => {
+		setToasts((prev) => prev.filter((t) => t.id !== id));
+	};
 
 	const handleApplyClick = (domain: Domain) => {
 		setApplyModal({
@@ -67,6 +88,8 @@ export default function DashboardShell({ data }: any) {
 	return (
 		<div className="h-screen flex flex-col text-beige">
 			{/* <WindScene particle_count={80} /> */}
+			<NotificationToasts toasts={toasts} removeToast={removeToast} />
+
 			{/* 🔴 TOP BAR */}
 			<header className="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-border-red bg-bg-dark backdrop-blur shrink-0">
 				<div className="flex items-center gap-3">
@@ -126,6 +149,14 @@ export default function DashboardShell({ data }: any) {
 						setSection={setSection}
 						setSidebarOpen={setSidebarOpen}
 					/>
+					<NavButton
+						id="notifications"
+						label="Notifications"
+						section={section}
+						setSection={setSection}
+						setSidebarOpen={setSidebarOpen}
+					/>
+
 					<NavButton
 						id="profile"
 						label="Profile"
@@ -228,6 +259,40 @@ export default function DashboardShell({ data }: any) {
 									</div>
 								</div>
 							))}
+						</div>
+					)}
+
+					{/* ================= NOTIFICATIONS ================= */}
+					{section === "notifications" && (
+						<div className="space-y-6 max-w-3xl">
+							<h2 className="text-2xl font-shuriken text-primary-red">
+								Notifications
+							</h2>
+
+							{notifications?.length === 0 && (
+								<p className="text-beige/70">No notifications</p>
+							)}
+
+							<div className="space-y-4">
+								{notifications?.map((n: any) => (
+									<div
+										key={n.id}
+										className="rounded-2xl bg-bg-dark border border-border-red p-5 shadow-[0_0_20px_rgba(255,0,0,0.06)]"
+									>
+										<p className="font-shuriken text-primary-red text-sm mb-1">
+											{n.title}
+										</p>
+
+										<p className="text-sm text-beige/80 whitespace-pre-line">
+											{n.body}
+										</p>
+
+										<p className="text-xs text-beige/40 mt-3">
+											{new Date(n.createdAt).toLocaleString()}
+										</p>
+									</div>
+								))}
+							</div>
 						</div>
 					)}
 

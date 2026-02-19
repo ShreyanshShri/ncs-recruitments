@@ -20,6 +20,10 @@ export default async function NewRoundPage() {
 			<Link href="/admin/questions" className="btn">
 				Questions
 			</Link>
+			<br />
+			<Link href="/admin/notifications" className="btn">
+				Notifications
+			</Link>
 		</div>
 	);
 }
