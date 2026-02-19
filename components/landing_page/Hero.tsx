@@ -27,9 +27,8 @@ const Hero = ({ setLoadSite }: { setLoadSite: any }) => {
 
 			{/* Hero */}
 			<div
-				className={`w-full min-h-screen transition-opacity duration-700 ${
-					loaded ? "opacity-100" : "opacity-0"
-				}`}
+				className={`w-full min-h-screen transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"
+					}`}
 				style={{
 					backgroundImage: `url(${bgImage.src})`,
 					backgroundSize: "cover",
@@ -46,7 +45,7 @@ const Hero = ({ setLoadSite }: { setLoadSite: any }) => {
 					height={80}
 					alt="NCS Logo"
 					className="
-		absolute top-6 left-1/2 -translate-x-1/2
+		absolute top-6 left-6
 drop-shadow-[0_0_15px_rgba(212,175,55,1)]
 	"
 				/>
