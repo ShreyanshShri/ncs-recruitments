@@ -35,10 +35,10 @@ export default function ResumeClient({
 					Upload Resume
 				</h1>
 
-				<div className="bg-light-beige text-bg-dark border border-border-red rounded-2xl p-8 space-y-6 shadow-lg">
+				<div className="bg-beige text-bg-dark border border-border-red rounded-2xl p-8 space-y-6 shadow-lg">
 					{alreadySubmitted ? (
 						<div className="space-y-3 text-center">
-							<p className="font-semibold text-green-700">PDF submitted</p>
+							<p className="font-semibold text-green-700">PDF Submitted</p>
 
 							<a
 								href={existingResumeUrl!}
@@ -60,6 +60,37 @@ export default function ResumeClient({
 									clientAllowedFormats: ["pdf"],
 									maxFileSize: MAX_SIZE,
 									folder: "ncs/resumes",
+									styles: {
+										frame: {
+											background: "#120a0a", // bg-dark backdrop
+										},
+
+										palette: {
+											window: "#e6d2b5", // beige modal
+											sourceBg: "#e6d2b5", // inner content area also beige
+											windowBorder: "#8e2320", // border-red
+
+											textDark: "#120a0a", // text on beige
+											textLight: "#120a0a",
+
+											tabIcon: "#b0322c",
+											menuIcons: "#b0322c",
+											link: "#b0322c",
+											action: "#b0322c", // primary buttons
+											inProgress: "#b0322c",
+
+											inactiveTabIcon: "#7a1e1b", // dark-red for muted icons
+
+											error: "#b0322c",
+											complete: "#b0322c",
+										},
+										fonts: {
+											default: {
+												active: true,
+												family: "Shuriken, sans-serif",
+											},
+										},
+									},
 								}}
 								onSuccess={(result: any) => {
 									setUploadError(null);

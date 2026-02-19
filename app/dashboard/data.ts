@@ -1,5 +1,10 @@
-import { Application, Round, Domain } from "@/types/db";
 import { prisma } from "@/app/lib/prisma";
+import { Application, Round, Domain } from "@/types/db";
+import { SubmissionStatus } from "@prisma/client";
+
+export type RoundWithStatus = Round & {
+	submissionStatus: SubmissionStatus;
+};
 
 export async function getDashboardData(userId: string) {
 	const [applications, userProfile, user, submissions, notifications] =
@@ -23,6 +28,7 @@ export async function getDashboardData(userId: string) {
 				where: { userId },
 				select: {
 					roundId: true,
+					status: true,
 					round: {
 						select: {
 							id: true,
@@ -34,12 +40,8 @@ export async function getDashboardData(userId: string) {
 				},
 			}),
 
-			// 🔔 notifications — filtered at DB level
 			prisma.notification.findMany({
-				where: {
-					isActive: true,
-					year: undefined, // placeholder, fixed below via dynamic filter
-				},
+				where: { isActive: true },
 				orderBy: { createdAt: "desc" },
 			}),
 		]);
@@ -47,23 +49,18 @@ export async function getDashboardData(userId: string) {
 	const domains = applications.map((a) => a.domain);
 	const year = userProfile?.year;
 
-	// --------------------------------------------------
-	// 🎯 filter notifications properly (in-memory because
-	// transaction results are already resolved)
-	// --------------------------------------------------
-
+	// -----------------------------
+	// 🔔 notification filter
+	// -----------------------------
 	const filteredNotifications = notifications.filter((n) => {
 		if (n.year !== year) return false;
-
 		if (n.scope === "COMMON") return true;
-
 		return n.domain && domains.includes(n.domain);
 	});
 
-	// --------------------------------------------------
-	// all rounds relevant to the user
-	// --------------------------------------------------
-
+	// -----------------------------
+	// all relevant rounds
+	// -----------------------------
 	const allRounds = await prisma.round.findMany({
 		where: {
 			year,
@@ -78,10 +75,9 @@ export async function getDashboardData(userId: string) {
 		orderBy: [{ order: "asc" }, { startTime: "asc" }],
 	});
 
-	// --------------------------------------------------
+	// -----------------------------
 	// highest cleared order per track
-	// --------------------------------------------------
-
+	// -----------------------------
 	const clearedOrderByTrack = new Map<string, number>();
 
 	for (const s of submissions) {
@@ -94,10 +90,9 @@ export async function getDashboardData(userId: string) {
 		}
 	}
 
-	// --------------------------------------------------
+	// -----------------------------
 	// unlocked rounds
-	// --------------------------------------------------
-
+	// -----------------------------
 	const visibleRounds = allRounds.filter((r) => {
 		const key = r.scope === "COMMON" ? "COMMON" : `DOMAIN:${r.domain}`;
 		const cleared = clearedOrderByTrack.get(key) ?? 0;
@@ -105,43 +100,52 @@ export async function getDashboardData(userId: string) {
 		return r.order === 1 || cleared === r.order - 1;
 	});
 
-	// --------------------------------------------------
-	// typing
-	// --------------------------------------------------
+	// -----------------------------
+	// 🧠 submission status map
+	// -----------------------------
+	const submissionStatusByRound = new Map<string, SubmissionStatus>();
 
-	const typedApplications = applications as Application[];
-	const typedRounds = visibleRounds as Round[];
+	for (const s of submissions) {
+		submissionStatusByRound.set(s.roundId, s.status);
+	}
 
-	// --------------------------------------------------
+	// -----------------------------
+	// attach status to rounds
+	// -----------------------------
+	const roundsWithStatus: RoundWithStatus[] = visibleRounds.map((r) => ({
+		...(r as Round),
+		submissionStatus:
+			submissionStatusByRound.get(r.id) ?? SubmissionStatus.NOT_STARTED,
+	}));
+
+	// -----------------------------
 	// available domains
-	// --------------------------------------------------
-
-	const appliedDomains = new Set(typedApplications.map((a) => a.domain));
+	// -----------------------------
+	const appliedDomains = new Set(applications.map((a) => a.domain));
 	const allDomains = Object.values(Domain) as Domain[];
+
 	const availableDomains = allDomains.filter((d) => !appliedDomains.has(d));
 
-	// --------------------------------------------------
+	// -----------------------------
 	// separate rounds
-	// --------------------------------------------------
+	// -----------------------------
+	const commonRounds = roundsWithStatus.filter((r) => r.scope === "COMMON");
 
-	const commonRounds = typedRounds.filter((r) => r.scope === "COMMON");
-
-	const domainRounds = typedRounds.filter(
-		(r): r is Round & { domain: Domain } =>
+	const domainRounds = roundsWithStatus.filter(
+		(r): r is RoundWithStatus & { domain: Domain } =>
 			r.scope === "DOMAIN" && r.domain !== null,
 	);
 
 	const roundsByDomain = Object.groupBy(
 		domainRounds,
 		(r) => r.domain,
-	) as Record<Domain, Round[]>;
+	) as Record<Domain, RoundWithStatus[]>;
 
-	// --------------------------------------------------
+	// -----------------------------
 	// payload
-	// --------------------------------------------------
-
+	// -----------------------------
 	const payload = {
-		applications,
+		applications: applications as Application[],
 		availableDomains,
 		roundsByDomain,
 		commonRounds,

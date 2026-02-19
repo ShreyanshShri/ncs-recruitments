@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Round, RoundType } from "@/types/db";
+import { RoundType } from "@/types/db";
+import { RoundWithStatus } from "@/app/dashboard/data";
 
 type Props = {
-	round: Round;
+	round: RoundWithStatus;
 };
 
 export function RoundCard({ round }: Props) {
@@ -15,11 +16,13 @@ export function RoundCard({ round }: Props) {
 
 			{/* META */}
 			<div className="space-y-1 text-sm font-medium text-bg-dark/80">
-				<p>Type: {round.type}</p>
+				<p className="font-bold mb-2">
+					Type: <span className="text-primary-red">{round.type}</span>
+				</p>
 
 				{round.startTime && (
 					<p>
-						Starts:{" "}
+						<span className="font-bold">Starts:</span>{" "}
 						{new Date(round.startTime).toLocaleString("en-GB", {
 							day: "2-digit",
 							month: "2-digit",
@@ -33,7 +36,7 @@ export function RoundCard({ round }: Props) {
 
 				{round.endTime && (
 					<p>
-						Ends:{" "}
+						<span className="font-bold">Ends:</span>{" "}
 						{new Date(round.endTime).toLocaleString("en-GB", {
 							day: "2-digit",
 							month: "2-digit",
@@ -44,14 +47,25 @@ export function RoundCard({ round }: Props) {
 						})}
 					</p>
 				)}
+
+				{round.submissionStatus && (
+					<p className="mt-2 font-bold font-sans">
+						Status:{" "}
+						<span className="text-primary-red/90">
+							{round.submissionStatus === "NOT_STARTED"
+								? "NOT_SUBMITTED"
+								: round.submissionStatus}
+						</span>
+					</p>
+				)}
 			</div>
 
 			{/* ACTIONS */}
-			<div className="flex flex-wrap gap-2 pt-2">
+			<div className="flex gap-2 pt-2">
 				{round.type === RoundType.MCQ && (
 					<Link
 						href={`/dashboard/mcq/${round.id}`}
-						className="border border-primary-red px-3 py-1 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+						className="border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
 					>
 						Start MCQ
 					</Link>
@@ -60,7 +74,7 @@ export function RoundCard({ round }: Props) {
 				{round.type === RoundType.RESUME && (
 					<Link
 						href={`/dashboard/resume/${round.id}`}
-						className="border border-primary-red px-3 py-1 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+						className="border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
 					>
 						Submit Resume
 					</Link>
@@ -68,7 +82,7 @@ export function RoundCard({ round }: Props) {
 
 				<Link
 					href={`/dashboard/result/${round.id}`}
-					className="border border-primary-red px-3 py-1 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+					className="border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
 				>
 					View Result
 				</Link>
