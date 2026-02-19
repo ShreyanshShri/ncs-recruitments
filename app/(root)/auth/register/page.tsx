@@ -35,12 +35,15 @@ export default function SignupForm() {
 	return (
 		<>
 			<Navbar />
+
 			<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-sans pt-20">
 				<form action={formAction} className="w-full max-w-md space-y-6">
 					<h1 className="text-beige text-3xl text-center font-shuriken">
 						Register
 					</h1>
+
 					<StepIndicator step={step} />
+
 					<input
 						type="hidden"
 						name="step"
@@ -53,6 +56,7 @@ export default function SignupForm() {
 							<input
 								name="name"
 								placeholder="Name"
+								required
 								className={inputStyle}
 								value={step1Data.name}
 								onChange={(e) =>
@@ -63,6 +67,7 @@ export default function SignupForm() {
 							<input
 								name="email"
 								type="email"
+								autoComplete="email"
 								placeholder="Email"
 								required
 								className={inputStyle}
@@ -74,7 +79,9 @@ export default function SignupForm() {
 
 							<input
 								type="date"
-								placeholder="Date of Birth"
+								name="password"
+								autoComplete="bday"
+								required
 								className={inputStyle}
 								value={step1Data.dob}
 								onChange={(e) =>
@@ -105,6 +112,7 @@ export default function SignupForm() {
 								required
 								className={inputStyle}
 							/>
+
 							<input
 								name="mobile"
 								placeholder="Mobile Number"
@@ -122,8 +130,6 @@ export default function SignupForm() {
 								<option value="">Year</option>
 								<option value="FIRST">1st</option>
 								<option value="SECOND">2nd</option>
-								{/* <option value="THIRD">3rd</option>
-								<option value="FOURTH">4th</option> */}
 							</select>
 
 							<select name="branch" required className={inputStyle}>
@@ -139,6 +145,12 @@ export default function SignupForm() {
 								<option value="EE">EE</option>
 								<option value="CIVIL">CIVIL</option>
 							</select>
+
+							<input
+								name="linkedIn"
+								placeholder="LinkedIn Profile (Optional)"
+								className={inputStyle}
+							/>
 
 							<div className="flex gap-3">
 								<button
@@ -159,18 +171,19 @@ export default function SignupForm() {
 							</div>
 						</>
 					)}
-					<Link
-						href="/auth/login"
-						className="text-beige text-[12px] font-light font-shuriken"
-					>
-						Already have an account? <span className="underline">Login</span>
-					</Link>
-					{/* ERROR */}
+
 					{state?.error && (
 						<p className="text-sm text-primary-red text-center">
 							{state.error}
 						</p>
 					)}
+
+					<Link
+						href="/auth/login"
+						className="text-beige text-[12px] font-light font-shuriken block text-center"
+					>
+						Already have an account? <span className="underline">Login</span>
+					</Link>
 				</form>
 			</div>
 
@@ -182,24 +195,24 @@ export default function SignupForm() {
 function StepIndicator({ step }: { step: 1 | 2 }) {
 	return (
 		<div className="flex items-center justify-center gap-3 mb-10">
-			{/* STEP 1 */}
 			<div
-				className={`h-4 w-4 rounded-full transition-colors duration-500
-        ${step >= 1 ? "bg-beige" : "bg-deep-brown"}`}
+				className={`h-4 w-4 rounded-full transition-colors duration-500 ${
+					step >= 1 ? "bg-beige" : "bg-deep-brown"
+				}`}
 			/>
 
-			{/* CONNECTOR */}
 			<div className="relative h-0.5 w-20 bg-deep-brown overflow-hidden rounded">
 				<div
-					className={`absolute inset-y-0 left-0 bg-beige transition-all duration-500
-          ${step === 2 ? "w-full" : "w-0"}`}
+					className={`absolute inset-y-0 left-0 bg-beige transition-all duration-500 ${
+						step === 2 ? "w-full" : "w-0"
+					}`}
 				/>
 			</div>
 
-			{/* STEP 2 */}
 			<div
-				className={`h-4 w-4 rounded-full transition-colors duration-500
-        ${step === 2 ? "bg-beige" : "bg-deep-brown"}`}
+				className={`h-4 w-4 rounded-full transition-colors duration-500 ${
+					step === 2 ? "bg-beige" : "bg-deep-brown"
+				}`}
 			/>
 		</div>
 	);

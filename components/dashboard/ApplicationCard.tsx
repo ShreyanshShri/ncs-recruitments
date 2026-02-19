@@ -28,7 +28,9 @@ export function ApplicationCard(props: Props) {
 function AppliedCard({ application }: { application: Application }) {
 	return (
 		<div className="p-4 rounded-xl space-y-2">
-			<h3 className="font-shuriken font-medium">{application.domain}</h3>
+			<h3 className="font-shuriken font-medium">
+				{application.domain === "TECHNICAL" ? "AI/ML" : application.domain}
+			</h3>
 			<p className="text-sm">Status: SUBMITTED</p>
 		</div>
 	);
@@ -45,7 +47,9 @@ function AvailableCard({
 }) {
 	return (
 		<div className="p-4 rounded-xl space-y-2">
-			<h3 className="font-shuriken font-medium">{domain}</h3>
+			<h3 className="font-shuriken font-medium">
+				{domain === "TECHNICAL" ? "AI/ML" : domain}
+			</h3>
 
 			<button
 				onClick={() => onApplyClick(domain)}

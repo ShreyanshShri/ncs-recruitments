@@ -50,13 +50,18 @@ export default function DashboardShell({ data }: any) {
 	const [applyModal, setApplyModal] = useState<{
 		open: boolean;
 		domain: Domain | null;
+		key?: string;
 	}>({
 		open: false,
 		domain: null,
 	});
 
 	const handleApplyClick = (domain: Domain) => {
-		setApplyModal({ open: true, domain });
+		setApplyModal({
+			open: true,
+			domain,
+			key: crypto.randomUUID(), // 👈 force fresh modal instance
+		});
 	};
 
 	return (
@@ -302,9 +307,10 @@ export default function DashboardShell({ data }: any) {
 					)}
 				</main>
 				<ApplySuccessModal
+					key={applyModal.key}
 					open={applyModal.open}
 					domain={applyModal.domain}
-					onClose={() => setApplyModal({ open: false, domain: null })}
+					onClose={() => setApplyModal({ open: false, domain: null, key: "" })}
 				/>
 			</div>
 		</div>
