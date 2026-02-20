@@ -56,6 +56,8 @@ export default function DashboardShell({ data }: any) {
 		notifications,
 	} = data;
 
+	const hasApplied = applications.length > 0;
+
 	const [applyModal, setApplyModal] = useState<{
 		open: boolean;
 		domain: Domain | null;
@@ -194,10 +196,14 @@ export default function DashboardShell({ data }: any) {
 							</div>
 
 							{/* APPLY TO DOMAIN */}
-							{availableDomains.length > 0 && (
+							{!hasApplied && availableDomains.length > 0 && (
 								<div className="space-y-6">
 									<h2 className="text-2xl font-shuriken text-primary-red">
 										Apply to a Domain
+										<p className="block text-sm text-beige/80 font-sans mt-3 tracking-widest">
+											<span className="font-bold text-primary-red">Note: </span>
+											You can only apply to one domain
+										</p>
 									</h2>
 
 									<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
