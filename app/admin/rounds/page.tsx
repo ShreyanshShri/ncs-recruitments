@@ -15,7 +15,7 @@ export default async function RoundsAdminPage() {
 	});
 
 	return (
-		<div className="max-w-5xl mx-auto py-10 space-y-6">
+		<div className="">
 			{/* Top actions */}
 			<div className="flex gap-4">
 				<Link href="/admin/rounds/create-round" className="btn">
@@ -27,12 +27,12 @@ export default async function RoundsAdminPage() {
 			</div>
 
 			{/* Rounds list */}
-			<div className="grid gap-4">
+			<div className="grid gap-4 mt-4">
 				{rounds.map((round) => (
 					<Link
 						key={round.id}
 						href={`/admin/rounds/${round.id}`}
-						className="border rounded-xl p-4 hover:bg-muted transition block"
+						className=" glass-card px-6 py-4"
 					>
 						<div className="flex justify-between items-center">
 							<div>
@@ -43,7 +43,7 @@ export default async function RoundsAdminPage() {
 								</div>
 							</div>
 
-							<div className="text-right text-sm">
+							<div className="text-right text-sm text-muted">
 								<div>{round.isActive ? "🟢 Active" : "⚪ Inactive"}</div>
 								<div>{round._count.submissions} participants</div>
 							</div>

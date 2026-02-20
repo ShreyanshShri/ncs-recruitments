@@ -10,7 +10,7 @@ export const domainExtraField: Record<
 	},
 	DEV: {
 		label: "GitHub",
-		placeholder: "shreyansh",
+		placeholder: "shreyanshShri",
 	},
 	DESIGN: {
 		label: "Behance",

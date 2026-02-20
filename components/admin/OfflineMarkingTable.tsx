@@ -31,68 +31,80 @@ export function OfflineMarkingTable({
 
 	return (
 		<form action={formAction} className="space-y-4">
-			<table className="w-full text-sm border rounded-lg overflow-hidden">
-				<thead className="bg-muted">
-					<tr>
-						<th className="p-2 text-left">Name</th>
-						<th className="p-2 text-left">Email</th>
-
-						{markingScheme.map((m: any) => (
-							<th key={m.title} className="p-2 text-left">
-								{m.title} ({m.maxMarks})
-							</th>
-						))}
-
-						<th className="p-2 text-left">Total</th>
-					</tr>
-				</thead>
-
-				<tbody>
-					{submissions.map((s: any, i: number) => {
-						const total = Object.values(rows[i].sections).reduce(
-							(a: number, b: any) => a + Number(b || 0),
-							0,
-						);
-
-						return (
-							<tr key={s.id} className="border-t">
-								<td className="p-2">
-									{s.application?.user?.name ?? s.user?.name ?? "—"}
-								</td>
-								<td className="p-2">
-									{s.application?.user?.email ?? s.user?.email ?? "—"}
-								</td>
+			<div className="glass-card p-5">
+				<div className="overflow-hidden rounded-xl border border-glass-border-soft">
+					<table className="w-full text-sm">
+						<thead className="bg-white/5 text-white/70">
+							<tr>
+								<th className="p-3 text-left font-medium">Name</th>
+								<th className="p-3 text-left font-medium">Email</th>
 
 								{markingScheme.map((m: any) => (
-									<td key={m.title} className="p-2">
-										<input
-											type="number"
-											min={0}
-											max={m.maxMarks}
-											value={rows[i].sections[m.title] || ""}
-											onChange={(e) =>
-												updateValue(i, m.title, Number(e.target.value))
-											}
-											className="border px-2 py-1 rounded w-20"
-										/>
-									</td>
+									<th key={m.title} className="p-3 text-left font-medium">
+										{m.title} ({m.maxMarks})
+									</th>
 								))}
 
-								<td className="p-2 font-medium">{total}</td>
+								<th className="p-3 text-left font-medium">Total</th>
 							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+						</thead>
+
+						<tbody>
+							{submissions.map((s: any, i: number) => {
+								const total = Object.values(rows[i].sections).reduce(
+									(a: number, b: any) => a + Number(b || 0),
+									0,
+								);
+
+								return (
+									<tr
+										key={s.id}
+										className="border-t border-white/5 hover:bg-white/4 transition-colors"
+									>
+										<td className="p-3">
+											{s.application?.user?.name ?? s.user?.name ?? "—"}
+										</td>
+
+										<td className="p-3 text-white/60">
+											{s.application?.user?.email ?? s.user?.email ?? "—"}
+										</td>
+
+										{markingScheme.map((m: any) => (
+											<td key={m.title} className="p-3">
+												<input
+													type="number"
+													min={0}
+													max={m.maxMarks}
+													value={rows[i].sections[m.title] || ""}
+													onChange={(e) =>
+														updateValue(i, m.title, Number(e.target.value))
+													}
+													className="glass-input w-20 text-center"
+												/>
+											</td>
+										))}
+
+										<td className="p-3 font-semibold text-white/80">{total}</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</div>
+			</div>
 
 			<input type="hidden" name="data" value={JSON.stringify(rows)} />
 
-			<button className="btn" disabled={pending}>
+			<button className="btn w-fit" disabled={pending}>
 				{pending ? "Saving..." : "Save Marks"}
 			</button>
 
 			{state.message && (
-				<p className={state.success ? "text-green-600" : "text-red-600"}>
+				<p
+					className={
+						state.success ? "text-emerald-400 text-sm" : "text-red-400 text-sm"
+					}
+				>
 					{state.message}
 				</p>
 			)}

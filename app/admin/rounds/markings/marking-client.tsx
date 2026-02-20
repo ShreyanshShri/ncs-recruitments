@@ -57,17 +57,21 @@ export default function MarkingSchemeClient({
 	const total = criteria.reduce((sum, c) => sum + (c.maxMarks || 0), 0);
 
 	return (
-		<div className="space-y-6">
+		<div className="">
 			{/* Round selector */}
 			<select
 				value={roundId}
 				onChange={(e) => setRoundId(e.target.value)}
-				className="w-full border px-3 py-2 rounded"
+				className="glass-input"
 			>
 				<option value="">Select round</option>
 
 				{rounds.map((r) => (
-					<option key={r.id} value={r.id}>
+					<option
+						key={r.id}
+						value={r.id}
+						className="bg-bg-elevated text-neutral-200"
+					>
 						{r.title} — {r.scope === "COMMON" ? "Common" : r.domain}
 					</option>
 				))}
@@ -75,12 +79,12 @@ export default function MarkingSchemeClient({
 
 			{/* Criteria rows */}
 			{criteria.map((c, i) => (
-				<div key={i} className="flex gap-3">
+				<div key={i} className="flex gap-3 mt-4">
 					<input
 						placeholder="Title"
 						value={c.title}
 						onChange={(e) => updateRow(i, "title", e.target.value)}
-						className="border px-3 py-2 w-full rounded"
+						className="glass-input"
 					/>
 
 					<input
@@ -88,25 +92,22 @@ export default function MarkingSchemeClient({
 						placeholder="Marks"
 						value={c.maxMarks}
 						onChange={(e) => updateRow(i, "maxMarks", e.target.value)}
-						className="border px-3 py-2 w-24 rounded"
+						className="glass-input"
 					/>
 
-					<button onClick={() => removeRow(i)} className="text-red-500">
+					<button onClick={() => removeRow(i)} className="text-red-500 btn">
 						✕
 					</button>
 				</div>
 			))}
 
-			<button onClick={addRow} className="border px-3 py-1 rounded text-sm">
+			<button onClick={addRow} className="btn mt-4">
 				+ Add
 			</button>
 
-			<div className="font-medium">Total: {total}</div>
+			<div className="font-medium mt-4">Total: {total}</div>
 
-			<button
-				onClick={handleSave}
-				className="bg-black text-white px-4 py-2 rounded"
-			>
+			<button onClick={handleSave} className="btn mt-4">
 				Save
 			</button>
 		</div>

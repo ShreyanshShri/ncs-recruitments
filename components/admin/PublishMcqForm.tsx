@@ -32,35 +32,48 @@ export function PublishMcqForm({
 	}
 
 	return (
-		<form action={formAction} className="space-y-3 border p-4 rounded-lg">
-			<div className="font-semibold">Publish Results</div>
+		<form action={formAction} className="space-y-4 p-5">
+			<div className="text-sm font-semibold tracking-wide text-white/80">
+				Publish Results
+			</div>
 
-			<div className="text-sm text-muted-foreground">
+			<div className="text-sm text-white/60">
 				Total submissions: {totalSubmissions}
 			</div>
 
-			<div>
-				<label className="text-sm">Candidates to promote</label>
+			<div className="space-y-1.5">
+				<label className="text-sm text-white/70">Candidates to promote</label>
+
 				<input
 					name="takeCount"
 					type="number"
 					defaultValue={defaultTake}
 					min={1}
 					max={totalSubmissions}
-					className="border px-2 py-1 rounded w-full"
+					className="glass-input"
 				/>
 			</div>
 
-			<label className="flex items-center gap-2 text-sm">
-				<input type="checkbox" required />I confirm publishing results
+			<label className="flex items-center gap-2 text-sm text-white/70">
+				<input
+					type="checkbox"
+					required
+					className="h-4 w-4 rounded border border-white/20 bg-transparent
+						   accent-white/80"
+				/>
+				I confirm publishing results
 			</label>
 
-			<button type="submit" disabled={pending} className="btn">
+			<button type="submit" disabled={pending} className="btn w-fit">
 				{pending ? "Publishing..." : "Publish"}
 			</button>
 
 			{state.message && (
-				<p className={state.success ? "text-green-600" : "text-red-600"}>
+				<p
+					className={
+						state.success ? "text-emerald-400 text-sm" : "text-red-400 text-sm"
+					}
+				>
 					{state.message}
 				</p>
 			)}

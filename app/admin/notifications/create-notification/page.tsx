@@ -24,61 +24,75 @@ export default function CreateNotificationForm() {
 	}, [state.success]);
 
 	return (
-		<form action={action} className="space-y-4 max-w-xl">
+		<form action={action} className="space-y-4 max-w-200 m-auto">
+			<h1 className="text-2xl font-semibold">Create Notification</h1>
 			<input
 				name="title"
 				placeholder="Title"
-				className="w-full border p-2 rounded"
 				required
+				className="glass-input"
 			/>
 
 			<textarea
 				name="body"
 				placeholder="Body"
-				className="w-full border p-2 rounded"
 				required
+				className="glass-input min-h-30 resize-y"
 			/>
 
-			<select name="year" className="w-full border p-2 rounded" required>
+			<label className="text-white/60 text-lg mb-2">Year: </label>
+			<select name="year" required className="glass-input appearance-none">
 				{Object.values(Year).map((y) => (
-					<option key={y} value={y}>
+					<option key={y} value={y} className="bg-bg-elevated text-neutral-200">
 						{y}
 					</option>
 				))}
 			</select>
 
+			<label className="text-white/60 text-lg mb-2">Scope: </label>
 			<select
 				name="scope"
-				className="w-full border p-2 rounded"
 				value={scope}
 				onChange={(e) => setScope(e.target.value as RoundScope)}
+				className="glass-input appearance-none"
 			>
 				{Object.values(RoundScope).map((s) => (
-					<option key={s} value={s}>
+					<option key={s} value={s} className="bg-bg-elevated text-neutral-200">
 						{s}
 					</option>
 				))}
 			</select>
 
 			{scope === "DOMAIN" && (
-				<select name="domain" className="w-full border p-2 rounded" required>
-					{Object.values(Domain).map((d) => (
-						<option key={d} value={d}>
-							{d}
-						</option>
-					))}
-				</select>
+				<>
+					<label className="text-white/60 text-lg mb-2">Scope: </label>
+					<select
+						name="domain"
+						required
+						className="glass-input appearance-none"
+					>
+						{Object.values(Domain).map((d) => (
+							<option
+								key={d}
+								value={d}
+								className="bg-bg-elevated text-neutral-200"
+							>
+								{d}
+							</option>
+						))}
+					</select>
+				</>
 			)}
 
-			<button
-				disabled={pending}
-				className="px-4 py-2 bg-black text-white rounded"
-			>
+			<button disabled={pending} className="btn w-fit">
 				{pending ? "Publishing..." : "Publish"}
 			</button>
 
-			{state.error && <p className="text-red-500">{state.error}</p>}
-			{state.success && <p className="text-green-600">Published ✅</p>}
+			{state.error && <p className="text-sm text-red-400">{state.error}</p>}
+
+			{state.success && (
+				<p className="text-sm text-emerald-400">Published ✅</p>
+			)}
 		</form>
 	);
 }

@@ -5,24 +5,31 @@ import { evaluateResumeAction } from "@/app/actions/resume";
 
 export function ResumeEvaluationTable({ submissions }: { submissions: any[] }) {
 	return (
-		<div className="border rounded-lg overflow-hidden">
-			<table className="w-full text-sm">
-				<thead className="bg-muted">
-					<tr>
-						<th className="p-2 text-left">Name</th>
-						<th className="p-2 text-left">Email</th>
-						<th className="p-2 text-left">Resume</th>
-						<th className="p-2 text-left">Score / 100</th>
-						<th className="p-2 text-left"></th>
-					</tr>
-				</thead>
+		<div className="glass-card p-5">
+			<div className="overflow-hidden rounded-xl border border-glass-border-soft">
+				<table className="w-full text-sm">
+					<thead className="bg-white/5 text-white/70">
+						<tr>
+							<th className="p-3 text-left font-medium">Name</th>
+							<th className="p-3 text-left font-medium">Email</th>
+							<th className="p-3 text-left font-medium">Resume</th>
+							<th className="p-3 text-left font-medium">Score / 100</th>
+							<th className="p-3 text-left font-medium"></th>
+						</tr>
+					</thead>
 
-				<tbody>
-					{submissions.map((s) => (
-						<ResumeRow key={s.id} submission={s} />
-					))}
-				</tbody>
-			</table>
+					<tbody>
+						{submissions.map((s) => (
+							<tr
+								key={s.id}
+								className="border-t border-white/5 hover:bg-white/4 transition-colors"
+							>
+								<ResumeRow submission={s} />
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	);
 }
@@ -36,16 +43,17 @@ function ResumeRow({ submission }: { submission: any }) {
 	const user = submission.application?.user ?? submission.user;
 
 	return (
-		<tr className="border-t">
-			<td className="p-2">{user?.name}</td>
-			<td className="p-2">{user?.email}</td>
+		<tr className="border-t border-white/5 hover:bg-white/4 transition-colors">
+			<td className="p-3 font-medium text-white/80">{user?.name}</td>
 
-			<td className="p-2">
+			<td className="p-3 text-white/60">{user?.email}</td>
+
+			<td className="p-3">
 				{submission.resumeUrl ? (
 					<a
 						href={submission.resumeUrl}
 						target="_blank"
-						className="text-blue-600 underline"
+						className="text-white/80 underline underline-offset-4 hover:text-white"
 					>
 						View
 					</a>
@@ -54,8 +62,8 @@ function ResumeRow({ submission }: { submission: any }) {
 				)}
 			</td>
 
-			<td className="p-2">
-				<form action={formAction} className="flex gap-2 items-center">
+			<td className="p-3">
+				<form action={formAction} className="flex items-center gap-2">
 					<input type="hidden" name="submissionId" value={submission.id} />
 
 					<input
@@ -64,20 +72,22 @@ function ResumeRow({ submission }: { submission: any }) {
 						min={0}
 						max={100}
 						defaultValue={submission.score ?? ""}
-						className="border px-2 py-1 w-20 rounded"
 						required
+						className="glass-input w-20 text-center"
 					/>
 
-					<button
-						disabled={pending}
-						className="border px-3 py-1 rounded bg-black text-white"
-					>
+					<button disabled={pending} className="btn h-9 px-3">
 						Save
 					</button>
 				</form>
 
-				{state?.error && <p className="text-xs text-red-500">{state.error}</p>}
-				{state?.success && <p className="text-xs text-green-600">Saved</p>}
+				{state?.error && (
+					<p className="mt-1 text-xs text-red-400">{state.error}</p>
+				)}
+
+				{state?.success && (
+					<p className="mt-1 text-xs text-emerald-400">Saved</p>
+				)}
 			</td>
 		</tr>
 	);

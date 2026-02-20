@@ -13,7 +13,10 @@ export default async function Page() {
 
 	return (
 		<div id="page" className="space-y-6">
-			<Link href="/admin/notifications/create-notification" className="btn">
+			<Link
+				href="/admin/notifications/create-notification"
+				className="btn w-fit"
+			>
 				Add Notification
 			</Link>
 
@@ -21,32 +24,38 @@ export default async function Page() {
 
 			<div className="space-y-4">
 				{notifications.length === 0 && (
-					<p className="text-muted-foreground">No notifications yet.</p>
+					<p className="text-white/60">No notifications yet.</p>
 				)}
 
 				{notifications.map((n) => (
-					<div
-						key={n.id}
-						className="border rounded-lg p-4 space-y-2 bg-bg-dark/40"
-					>
-						<div className="flex items-center justify-between">
-							<h2 className="font-semibold">{n.title}</h2>
+					<div key={n.id} className="glass-card p-5 space-y-3">
+						{/* top row */}
+						<div className="flex items-start justify-between gap-4">
+							<h2 className="font-semibold text-white/85">{n.title}</h2>
 
-							<span className="text-xs px-2 py-1 rounded border">
+							<span
+								className="text-xs px-2.5 py-1 rounded-md
+										 border border-white/15
+										 bg-white/5 text-white/70 whitespace-nowrap"
+							>
 								{n.scope}
 								{n.scope === "DOMAIN" && n.domain && ` • ${n.domain}`}
 							</span>
 						</div>
 
-						<p className="text-sm text-muted-foreground whitespace-pre-line">
+						{/* body */}
+						<p className="text-sm text-white/60 whitespace-pre-line leading-relaxed">
 							{n.body}
 						</p>
 
-						<div className="text-xs text-muted-foreground flex gap-4">
+						{/* meta */}
+						<div className="flex flex-wrap gap-4 text-xs text-white/50">
 							<span>Year: {n.year}</span>
+
 							<span>{new Date(n.createdAt).toLocaleString()}</span>
+
 							{!n.isActive && (
-								<span className="text-red-500 font-medium">Inactive</span>
+								<span className="font-medium text-red-400">Inactive</span>
 							)}
 						</div>
 					</div>
