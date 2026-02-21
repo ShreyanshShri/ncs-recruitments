@@ -53,6 +53,9 @@ export default function SignupForm() {
 					{/* ================= STEP 1 ================= */}
 					{step === 1 && (
 						<>
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Name
+							</p>
 							<input
 								name="name"
 								placeholder="Name"
@@ -64,6 +67,9 @@ export default function SignupForm() {
 								}
 							/>
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Email
+							</p>
 							<input
 								name="email"
 								type="email"
@@ -77,6 +83,9 @@ export default function SignupForm() {
 								}
 							/>
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Date Of Birth
+							</p>
 							<input
 								type="date"
 								name="password"
@@ -106,6 +115,9 @@ export default function SignupForm() {
 							<input type="hidden" name="email" value={step1Data.email} />
 							<input type="hidden" name="password" value={step1Data.dob} />
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Roll Number:
+							</p>
 							<input
 								name="rollNumber"
 								placeholder="Roll Number"
@@ -113,6 +125,9 @@ export default function SignupForm() {
 								className={inputStyle}
 							/>
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Mobile Number
+							</p>
 							<input
 								name="mobile"
 								placeholder="Mobile Number"
@@ -120,18 +135,27 @@ export default function SignupForm() {
 								className={inputStyle}
 							/>
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Institution
+							</p>
 							<select name="institution" required className={inputStyle}>
 								<option value="">Institution</option>
 								<option value="AKTU">AKTU</option>
 								<option value="JSSUNI">JSSUNI</option>
 							</select>
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Year
+							</p>
 							<select name="year" required className={inputStyle}>
 								<option value="">Year</option>
 								<option value="FIRST">1st</option>
 								<option value="SECOND">2nd</option>
 							</select>
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								Branch
+							</p>
 							<select name="branch" required className={inputStyle}>
 								<option value="">Branch</option>
 								<option value="CSE">CSE</option>
@@ -146,6 +170,9 @@ export default function SignupForm() {
 								<option value="CIVIL">CIVIL</option>
 							</select>
 
+							<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+								LinkedIn Profile
+							</p>
 							<input
 								name="linkedIn"
 								placeholder="LinkedIn Profile (Optional)"

@@ -33,7 +33,11 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" className={`${roboto.variable} ${lastShuriken.variable}`}>
+		<html
+			lang="en"
+			className={`${roboto.variable} ${lastShuriken.variable}`}
+			suppressHydrationWarning
+		>
 			<body className="font-sans antialiased">
 				<IntroProvider>{children}</IntroProvider>
 			</body>

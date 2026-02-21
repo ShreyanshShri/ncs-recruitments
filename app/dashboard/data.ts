@@ -79,8 +79,15 @@ export async function getDashboardData(userId: string) {
 	// highest cleared order per track
 	// -----------------------------
 	const clearedOrderByTrack = new Map<string, number>();
+	const passedDomains = domains.filter((d) => {
+		const key = `DOMAIN:${d}`;
+		return (clearedOrderByTrack.get(key) ?? 0) > 0;
+	});
+
+	const upcomingDomains = domains.filter((d) => !passedDomains.includes(d));
 
 	for (const s of submissions) {
+		if (s.status !== SubmissionStatus.EVALUATED) continue;
 		const r = s.round;
 		const key = r.scope === "COMMON" ? "COMMON" : `DOMAIN:${r.domain}`;
 		const prev = clearedOrderByTrack.get(key) ?? 0;
@@ -97,7 +104,18 @@ export async function getDashboardData(userId: string) {
 		const key = r.scope === "COMMON" ? "COMMON" : `DOMAIN:${r.domain}`;
 		const cleared = clearedOrderByTrack.get(key) ?? 0;
 
-		return r.order === 1 || cleared === r.order - 1;
+		// return r.order === 1 || cleared === r.order - 1;
+		// allow first round always if relevant to user
+		if (r.order === 1) {
+			if (r.scope === "COMMON") return true;
+			return domains.includes(r.domain as Domain);
+		}
+
+		// const key = r.scope === "COMMON" ? "COMMON" : `DOMAIN:${r.domain}`;
+		// const cleared = clearedOrderByTrack.get(key) ?? 0;
+
+		// next unlocked round
+		return cleared === r.order - 1;
 	});
 
 	// -----------------------------
@@ -151,6 +169,8 @@ export async function getDashboardData(userId: string) {
 		commonRounds,
 		user,
 		notifications: filteredNotifications,
+		passedDomains,
+		upcomingDomains,
 	};
 
 	return JSON.parse(JSON.stringify(payload));

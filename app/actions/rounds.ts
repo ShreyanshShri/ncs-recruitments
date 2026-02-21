@@ -10,6 +10,7 @@ import {
 } from "@prisma/client";
 import { requireAdmin } from "@/app/lib/auth";
 import { FormState } from "@/components/admin/CreateRoundForm";
+import { Prisma, Round } from "@prisma/client";
 
 export async function createRound(
 	_prevState: FormState,
@@ -171,6 +172,41 @@ export type PublishState = {
 	message: string;
 };
 
+async function getRankedSubmissionsForPublish(
+	tx: Prisma.TransactionClient,
+	round: Round,
+) {
+	const baseWhere = {
+		roundId: round.id,
+		score: { not: null },
+		OR: [
+			{ application: { user: { profile: { year: round.year } } } },
+			{ user: { profile: { year: round.year } } },
+		],
+	};
+
+	if (round.type === "MCQ") {
+		return tx.submission.findMany({
+			where: {
+				...baseWhere,
+				status: {
+					in: [SubmissionStatus.SUBMITTED, SubmissionStatus.EVALUATED],
+				},
+			},
+			orderBy: { score: "desc" },
+		});
+	}
+
+	// RESUME + OFFLINE → ONLY evaluated
+	return tx.submission.findMany({
+		where: {
+			...baseWhere,
+			status: SubmissionStatus.EVALUATED,
+		},
+		orderBy: { score: "desc" },
+	});
+}
+
 export async function publishMcqRound(
 	roundId: string,
 	_prevState: PublishState,
@@ -188,31 +224,52 @@ export async function publishMcqRound(
 			const round = await tx.round.findUnique({ where: { id: roundId } });
 			if (!round) return { success: false, message: "Invalid round" };
 
-			// 🟢 ONLY submissions of this YEAR
-			const submissions = await tx.submission.findMany({
-				where: {
-					roundId,
-					status: SubmissionStatus.EVALUATED,
-					OR: [
-						{
-							application: {
-								user: {
-									profile: { year: round.year },
-								},
-							},
-						},
-						{
-							user: {
-								profile: { year: round.year },
-							},
-						},
-					],
-				},
-				orderBy: { score: "desc" },
-			});
+			// 🟢 ACCEPT SUBMITTED + EVALUATED
+			// const submissions = await tx.submission.findMany({
+			// 	where: {
+			// 		roundId,
+			// 		status: {
+			// 			in: [SubmissionStatus.SUBMITTED, SubmissionStatus.EVALUATED],
+			// 		},
+			// 		OR: [
+			// 			{
+			// 				application: {
+			// 					user: { profile: { year: round.year } },
+			// 				},
+			// 			},
+			// 			{
+			// 				user: {
+			// 					profile: { year: round.year },
+			// 				},
+			// 			},
+			// 		],
+			// 	},
+			// 	orderBy: { score: "desc" },
+			// });
+			const submissions = await getRankedSubmissionsForPublish(tx, round);
+
+			if (round.type !== "MCQ" && submissions.length === 0) {
+				return {
+					success: false,
+					message: "No evaluated submissions to publish",
+				};
+			}
 
 			const qualified = submissions.slice(0, takeCount);
 			const cutoff = qualified.at(-1)?.score ?? 0;
+
+			// ✅ Upgrade qualified to EVALUATED
+			if (qualified.length) {
+				await tx.submission.updateMany({
+					where: {
+						id: { in: qualified.map((q) => q.id) },
+						status: SubmissionStatus.SUBMITTED,
+					},
+					data: {
+						status: SubmissionStatus.EVALUATED,
+					},
+				});
+			}
 
 			// =====================================================
 			// ❌ REJECTION — YEAR SAFE
@@ -263,15 +320,17 @@ export async function publishMcqRound(
 				},
 			});
 
-			if (nextCommonRound) {
-				// DOMAIN → COMMON OR COMMON → COMMON
+			console.log("Next Common Round: ", nextCommonRound);
 
+			if (nextCommonRound) {
 				let aliveUserIds: string[] = [];
 
 				if (round.scope === "DOMAIN") {
 					const aliveApps = await tx.application.findMany({
 						where: {
-							id: { in: qualified.map((q) => q.applicationId!) },
+							id: {
+								in: qualified.map((q) => q.applicationId!),
+							},
 							status: { not: ApplicationStatus.REJECTED },
 							user: { profile: { year: round.year } },
 						},
@@ -294,8 +353,6 @@ export async function publishMcqRound(
 					skipDuplicates: true,
 				});
 			} else {
-				// COMMON → DOMAIN OR DOMAIN → DOMAIN
-
 				const nextDomainRounds = await tx.round.findMany({
 					where: {
 						order: nextOrder,
@@ -303,6 +360,8 @@ export async function publishMcqRound(
 						year: round.year,
 					},
 				});
+
+				console.log("Next Domain Rounds", nextDomainRounds);
 
 				const domainRoundMap = new Map(
 					nextDomainRounds.map((r) => [r.domain, r.id]),
@@ -313,7 +372,9 @@ export async function publishMcqRound(
 				if (round.scope === "COMMON") {
 					aliveApps = await tx.application.findMany({
 						where: {
-							userId: { in: qualified.map((q) => q.userId!) },
+							userId: {
+								in: qualified.map((q) => q.userId!),
+							},
 							status: { not: ApplicationStatus.REJECTED },
 							user: { profile: { year: round.year } },
 						},
@@ -324,13 +385,17 @@ export async function publishMcqRound(
 				if (round.scope === "DOMAIN") {
 					aliveApps = await tx.application.findMany({
 						where: {
-							id: { in: qualified.map((q) => q.applicationId!) },
+							id: {
+								in: qualified.map((q) => q.applicationId!),
+							},
 							status: { not: ApplicationStatus.REJECTED },
 							user: { profile: { year: round.year } },
 						},
 						select: { id: true, domain: true },
 					});
 				}
+
+				console.log("Alive Apps: ", aliveApps);
 
 				const data = aliveApps
 					.map((app) => {
@@ -389,32 +454,26 @@ export async function saveOfflineMarks(
 	try {
 		await requireAdmin();
 
-		const raw = formData.get("data") as string;
+		const submissionId = formData.get("submissionId") as string;
+		const raw = formData.get("sections") as string;
 
-		const parsed: {
-			submissionId: string;
-			sections: Record<string, number>;
-		}[] = JSON.parse(raw);
+		const sections: Record<string, number> = JSON.parse(raw);
 
-		await prisma.$transaction(async (tx) => {
-			for (const row of parsed) {
-				const total = Object.values(row.sections).reduce(
-					(a, b) => a + Number(b || 0),
-					0,
-				);
+		const total = Object.values(sections).reduce(
+			(a, b) => a + Number(b || 0),
+			0,
+		);
 
-				await tx.submission.update({
-					where: { id: row.submissionId },
-					data: {
-						responses: row.sections,
-						score: total,
-						status: SubmissionStatus.EVALUATED,
-					},
-				});
-			}
+		await prisma.submission.update({
+			where: { id: submissionId },
+			data: {
+				responses: sections,
+				score: total,
+				status: SubmissionStatus.EVALUATED,
+			},
 		});
 
-		return { success: true, message: "Marks saved" };
+		return { success: true, message: "Saved" };
 	} catch {
 		return { success: false, message: "Failed to save marks" };
 	}

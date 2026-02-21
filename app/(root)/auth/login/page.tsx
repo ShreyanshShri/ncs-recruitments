@@ -31,6 +31,9 @@ export default function Login() {
 					</h1>
 
 					{/* EMAIL */}
+					<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+						Email
+					</p>
 					<input
 						name="email"
 						type="email"
@@ -41,11 +44,15 @@ export default function Login() {
 					/>
 
 					{/* DOB PASSWORD */}
+					<p className="text-md tracking-wider opacity-75 mb-2 text-light-beige">
+						Date Of Birth
+					</p>
 					<input
 						name="password"
 						type="date"
 						autoComplete="bday"
 						required
+						placeholder="Date of Birth"
 						className={inputStyle}
 					/>
 

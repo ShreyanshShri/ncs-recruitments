@@ -5,7 +5,7 @@ import { evaluateResumeAction } from "@/app/actions/resume";
 
 export function ResumeEvaluationTable({ submissions }: { submissions: any[] }) {
 	return (
-		<div className="glass-card p-5">
+		<div className="p-5">
 			<div className="overflow-hidden rounded-xl border border-glass-border-soft">
 				<table className="w-full text-sm">
 					<thead className="bg-white/5 text-white/70">
@@ -14,7 +14,7 @@ export function ResumeEvaluationTable({ submissions }: { submissions: any[] }) {
 							<th className="p-3 text-left font-medium">Email</th>
 							<th className="p-3 text-left font-medium">Resume</th>
 							<th className="p-3 text-left font-medium">Score / 100</th>
-							<th className="p-3 text-left font-medium"></th>
+							{/* <th className="p-3 text-left font-medium">Actions</th> */}
 						</tr>
 					</thead>
 
@@ -43,7 +43,7 @@ function ResumeRow({ submission }: { submission: any }) {
 	const user = submission.application?.user ?? submission.user;
 
 	return (
-		<tr className="border-t border-white/5 hover:bg-white/4 transition-colors">
+		<>
 			<td className="p-3 font-medium text-white/80">{user?.name}</td>
 
 			<td className="p-3 text-white/60">{user?.email}</td>
@@ -89,6 +89,6 @@ function ResumeRow({ submission }: { submission: any }) {
 					<p className="mt-1 text-xs text-emerald-400">Saved</p>
 				)}
 			</td>
-		</tr>
+		</>
 	);
 }

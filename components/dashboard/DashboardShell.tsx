@@ -52,6 +52,8 @@ export default function DashboardShell({ data }: any) {
 		availableDomains,
 		commonRounds,
 		roundsByDomain,
+		passedDomains,
+		upcomingDomains,
 		user,
 		notifications,
 	} = data;
@@ -193,6 +195,25 @@ export default function DashboardShell({ data }: any) {
 										</div>
 									))}
 								</div>
+
+								{passedDomains?.length > 0 && (
+									<div className="space-y-4">
+										<h3 className="text-lg font-shuriken text-beige/80">
+											Domains Cleared
+										</h3>
+
+										<div className="flex flex-wrap gap-3">
+											{passedDomains.map((d: Domain) => (
+												<div
+													key={d}
+													className="px-4 py-2 rounded-lg bg-primary-red text-beige text-sm font-shuriken"
+												>
+													{d}
+												</div>
+											))}
+										</div>
+									</div>
+								)}
 							</div>
 
 							{/* APPLY TO DOMAIN */}

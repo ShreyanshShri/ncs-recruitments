@@ -39,12 +39,13 @@ export default async function RoundsAdminPage() {
 								<div className="text-lg font-semibold">{round.title}</div>
 
 								<div className="text-sm text-muted-foreground">
-									{round.domain} • Round {round.order} • {round.type}
+									{round.scope === "DOMAIN" ? round.domain : "COMMON"} • Round{" "}
+									{round.order} • {round.type}
 								</div>
 							</div>
 
-							<div className="text-right text-sm text-muted">
-								<div>{round.isActive ? "🟢 Active" : "⚪ Inactive"}</div>
+							<div className="text-right text-sm opacity-75">
+								{/* <div>{round.isActive ? "🟢 Active" : "⚪ Inactive"}</div> */}
 								<div>{round._count.submissions} participants</div>
 							</div>
 						</div>

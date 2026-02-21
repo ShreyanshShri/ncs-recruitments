@@ -37,16 +37,5 @@ export default async function McqPage({
 	}
 
 	/* ✅ Success */
-	return (
-		<div className="min-h-screen bg-bg-dark py-12 px-6">
-			<div className="max-w-5xl mx-auto space-y-8">
-				{/* Optional round title */}
-				<h1 className="text-3xl font-shuriken text-primary-red tracking-wide text-center">
-					{result.round?.title}
-				</h1>
-
-				<McqForm round={result.round} />
-			</div>
-		</div>
-	);
+	return <McqForm round={result.round} />;
 }
