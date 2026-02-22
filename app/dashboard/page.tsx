@@ -1,11 +1,5 @@
-import { requireUser } from "@/app/lib/auth";
-import { getDashboardData } from "./data";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { redirect } from "next/navigation";
 
-export default async function DashboardPage() {
-	const session = await requireUser();
-
-	const data = await getDashboardData(session.userId);
-
-	return <DashboardShell data={data} />;
+export default function DashboardIndexPage() {
+	redirect("/dashboard/applications");
 }

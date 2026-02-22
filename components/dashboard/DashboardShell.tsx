@@ -53,7 +53,6 @@ export default function DashboardShell({ data }: any) {
 		commonRounds,
 		roundsByDomain,
 		passedDomains,
-		upcomingDomains,
 		user,
 		notifications,
 	} = data;
