@@ -84,41 +84,76 @@ export async function startAllFirstRounds(
 	try {
 		await requireAdmin();
 
-		const result = await prisma.$transaction(async (tx) => {
-			const firstOrder = (
-				await tx.round.aggregate({
-					_min: { order: true },
-				})
-			)._min.order;
+		// 1️⃣ Get first order
+		const firstOrder = (
+			await prisma.round.aggregate({
+				_min: { order: true },
+			})
+		)._min.order;
 
-			if (firstOrder === null) return { created: 0 };
+		if (firstOrder === null) {
+			return {
+				success: true,
+				message: "No rounds found",
+				created: 0,
+			};
+		}
 
-			const rounds = await tx.round.findMany({
-				where: { order: firstOrder },
-			});
+		// 2️⃣ Get all first-order rounds
+		const rounds = await prisma.round.findMany({
+			where: { order: firstOrder },
+			select: {
+				id: true,
+				scope: true,
+				domain: true,
+				year: true,
+			},
+		});
 
-			let totalCreated = 0;
+		const years = [...new Set(rounds.map((r) => r.year))];
 
-			for (const round of rounds) {
-				// ✅ applications ONLY of this year
-				const applications = await tx.application.findMany({
-					where: {
-						status: ApplicationStatus.SUBMITTED,
-						user: {
-							profile: {
-								year: round.year,
-							},
+		// 3️⃣ Fetch all relevant applications ONCE
+		const applications = await prisma.application.findMany({
+			where: {
+				status: ApplicationStatus.SUBMITTED,
+				user: {
+					profile: {
+						year: { in: years },
+					},
+				},
+			},
+			select: {
+				id: true,
+				domain: true,
+				userId: true,
+				user: {
+					select: {
+						profile: {
+							select: { year: true },
 						},
 					},
-					select: { id: true, domain: true, userId: true },
-				});
+				},
+			},
+		});
 
-				const distinctUsers = [...new Set(applications.map((a) => a.userId))];
+		// 4️⃣ Transaction → only writes
+		const totalCreated = await prisma.$transaction(async (tx) => {
+			let created = 0;
+
+			for (const round of rounds) {
+				// filter apps of this year (null-safe)
+				const appsOfYear = applications.filter(
+					(a) => a.user.profile?.year === round.year,
+				);
+
+				const distinctUsers = [...new Set(appsOfYear.map((a) => a.userId))];
 
 				const appsByDomain = new Map<Domain, string[]>();
 
-				for (const app of applications) {
-					if (!appsByDomain.has(app.domain)) appsByDomain.set(app.domain, []);
+				for (const app of appsOfYear) {
+					if (!appsByDomain.has(app.domain)) {
+						appsByDomain.set(app.domain, []);
+					}
 					appsByDomain.get(app.domain)!.push(app.id);
 				}
 
@@ -131,21 +166,21 @@ export async function startAllFirstRounds(
 						skipDuplicates: true,
 					});
 
-					totalCreated += res.count;
+					created += res.count;
 				}
 
 				if (round.scope === "DOMAIN" && round.domain) {
 					const targetAppIds = appsByDomain.get(round.domain) ?? [];
 
 					const res = await tx.submission.createMany({
-						data: targetAppIds.map((id) => ({
-							applicationId: id,
+						data: targetAppIds.map((applicationId) => ({
+							applicationId,
 							roundId: round.id,
 						})),
 						skipDuplicates: true,
 					});
 
-					totalCreated += res.count;
+					created += res.count;
 				}
 
 				await tx.round.update({
@@ -154,17 +189,21 @@ export async function startAllFirstRounds(
 				});
 			}
 
-			return { created: totalCreated };
+			return created;
 		});
 
 		return {
 			success: true,
 			message: "Initial rounds started",
-			created: result.created,
+			created: totalCreated,
 		};
-	} catch (e: any) {
+	} catch (e) {
 		console.error(e);
-		return { success: false, message: "Failed to start rounds" };
+		return {
+			success: false,
+			message: "Failed to start rounds",
+			created: 0,
+		};
 	}
 }
 
