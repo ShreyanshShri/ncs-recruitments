@@ -23,7 +23,12 @@ export default async function RoundPage({
 
 	const submissions = await prisma.submission.findMany({
 		where: { roundId: round.id },
-		orderBy: { score: "desc" },
+		orderBy: {
+			score: {
+				sort: "desc",
+				nulls: "last",
+			},
+		},
 		include: {
 			user: true,
 			application: {
