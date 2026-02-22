@@ -65,8 +65,9 @@ export default function Navbar({ isPlaying, toggleMusic }: NavbarProps) {
 
 			{/* MOBILE MENU */}
 			<div
-				className={`md:hidden transition-all duration-300 overflow-hidden ${open ? "max-h-60" : "max-h-0"
-					} bg-bg-dark/95 backdrop-blur-lg`}
+				className={`md:hidden transition-all duration-300 overflow-hidden ${
+					open ? "max-h-60" : "max-h-0"
+				} bg-bg-dark/95 backdrop-blur-lg`}
 			>
 				<ul className="flex flex-col items-center gap-6 py-6 text-beige text-sm tracking-widest">
 					<a

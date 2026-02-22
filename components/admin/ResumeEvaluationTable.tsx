@@ -1,13 +1,40 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 import { evaluateResumeAction } from "@/app/actions/resume";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 export function ResumeEvaluationTable({ submissions }: { submissions: any[] }) {
+	const tableRef = useRef<HTMLTableElement>(null);
+
+	const handleExport = () => {
+		if (!tableRef.current) return;
+
+		// 1. Convert the HTML table to a workbook object
+		const workbook = XLSX.utils.table_to_book(tableRef.current);
+
+		// 2. Generate the Excel binary data
+		const excelBuffer = XLSX.write(workbook, {
+			bookType: "xlsx",
+			type: "array",
+		});
+
+		// 3. Create a Blob and save it
+		const data = new Blob([excelBuffer], {
+			type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+		});
+
+		saveAs(data, "Leaderboard.xlsx");
+	};
+
 	return (
 		<div className="p-5">
 			<div className="overflow-hidden rounded-xl border border-glass-border-soft">
-				<table className="w-full text-sm">
+				<button onClick={handleExport} className="btn">
+					Export Excel
+				</button>
+				<table className="w-full text-sm" ref={tableRef}>
 					<thead className="bg-white/5 text-white/70">
 						<tr>
 							<th className="p-3 text-left font-medium">Name</th>

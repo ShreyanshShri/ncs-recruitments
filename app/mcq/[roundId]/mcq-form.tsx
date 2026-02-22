@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { submitMcq } from "@/app/actions/questions";
 
 type QState = {
@@ -12,23 +12,30 @@ export default function McqForm({ round }: { round: any }) {
 	const storageKey = `mcq_round_${round.id}`;
 	const questions = round.questions;
 
+	const formRef = useRef<HTMLFormElement>(null);
+
+	// const TEST_DURATION = 30 * 60; // 30 min in seconds
+	const TEST_DURATION = 20; // 30 min in seconds
+	const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
+	const hasSubmittedRef = useRef(false);
+
 	/* ---------------- STATE ---------------- */
 
 	const [currentIndex, setCurrentIndex] = useState(0);
-
 	const [qState, setQState] = useState<Record<string, QState>>(() => {
-		if (typeof window === "undefined") return {};
+		const saved =
+			typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
 
-		const saved = localStorage.getItem(storageKey);
 		if (saved) return JSON.parse(saved);
 
 		const init: Record<string, QState> = {};
 		round.questions.forEach((q: any, i: number) => {
 			init[q.id] = {
 				answer: null,
-				visited: i === 0, // first question visited
+				visited: i === 0,
 			};
 		});
+
 		return init;
 	});
 
@@ -39,6 +46,40 @@ export default function McqForm({ round }: { round: any }) {
 	useEffect(() => {
 		localStorage.setItem(storageKey, JSON.stringify(qState));
 	}, [qState, storageKey]);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setTimeLeft((prev) => {
+				if (prev <= 1) {
+					clearInterval(interval);
+
+					if (!hasSubmittedRef.current) {
+						hasSubmittedRef.current = true;
+
+						setTimeout(() => {
+							formRef.current?.requestSubmit();
+						}, 0);
+					}
+
+					return 0;
+				}
+
+				return prev - 1;
+			});
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	const formattedTime = useMemo(() => {
+		const m = Math.floor(timeLeft / 60)
+			.toString()
+			.padStart(2, "0");
+
+		const s = (timeLeft % 60).toString().padStart(2, "0");
+
+		return `${m}:${s}`;
+	}, [timeLeft]);
 
 	/* ---------------- HELPERS ---------------- */
 
@@ -106,7 +147,7 @@ export default function McqForm({ round }: { round: any }) {
 
 	return (
 		<div className="min-h-screen bg-bg-dark text-beige flex">
-			<form action={formAction} className="flex w-full">
+			<form ref={formRef} action={formAction} className="flex w-full">
 				<input type="hidden" name="roundId" value={round.id} />
 				{hiddenInputs}
 
@@ -116,6 +157,17 @@ export default function McqForm({ round }: { round: any }) {
 						<h2 className="font-shuriken text-primary-red text-xl mb-8">
 							{round.title}
 						</h2>
+
+						<div className="mb-6 text-center">
+							<p className="text-sm text-light-beige">Time Left</p>
+							<p
+								className={`font-shuriken text-2xl ${
+									timeLeft <= 60 ? "text-primary-red" : "text-beige"
+								}`}
+							>
+								{formattedTime}
+							</p>
+						</div>
 
 						<div className="grid grid-cols-4 gap-2">
 							{questions.map((q: any, i: number) => {

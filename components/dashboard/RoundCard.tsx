@@ -64,7 +64,7 @@ export function RoundCard({ round }: Props) {
 			<div className="flex gap-2 pt-2">
 				{round.type === RoundType.MCQ && (
 					<Link
-						href={`/dashboard/mcq/${round.id}`}
+						href={`/mcq/${round.id}`}
 						className="border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
 					>
 						Start MCQ

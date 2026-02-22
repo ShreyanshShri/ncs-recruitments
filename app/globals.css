@@ -297,6 +297,16 @@
 	background-color: #ef4444; /* lighter red on hover */
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+	/* This makes it white */
+	filter: invert(1);
+
+	/* OR: Use a specific color (this makes it a light blue/cyan) */
+	/* filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(118%) contrast(119%); */
+
+	cursor: pointer;
+}
+
 /* Optional: Set your default background and text colors globally */
 @layer base {
 	body {
