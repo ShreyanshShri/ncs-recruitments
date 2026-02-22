@@ -67,6 +67,10 @@ export async function submitMcq(
 		if (submission.status === "SUBMITTED")
 			return { error: "Already submitted" };
 
+		if (!submission.attendanceAllowed) {
+			return { error: "You are not marked present for this round" };
+		}
+
 		let score = 0;
 
 		for (const q of submission.round.questions) {

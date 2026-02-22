@@ -1,3 +1,5 @@
+import QrCode from "@/components/dashboard/QrCode";
+
 export default function ProfilePage({ data }: any) {
 	const { user } = data;
 
@@ -20,6 +22,8 @@ export default function ProfilePage({ data }: any) {
 						</p>
 						<p className="text-primary-red break-all">{user?.email}</p>
 					</div>
+
+					<QrCode text={user.id} />
 
 					<div className="h-px bg-border-red/60" />
 

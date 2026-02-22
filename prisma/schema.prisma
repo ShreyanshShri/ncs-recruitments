@@ -82,19 +82,22 @@ model Question {
 }
 
 model Submission {
-  id            String           @id @default(cuid())
-  applicationId String?
-  roundId       String
-  status        SubmissionStatus @default(NOT_STARTED)
-  score         Float?
-  responses     Json?
-  resumeUrl     String?
-  evaluatedBy   String?
-  createdAt     DateTime         @default(now())
-  userId        String?
-  application   Application?     @relation(fields: [applicationId], references: [id])
-  round         Round            @relation(fields: [roundId], references: [id])
-  user          User?            @relation(fields: [userId], references: [id])
+  id                 String           @id @default(cuid())
+  applicationId      String?
+  roundId            String
+  status             SubmissionStatus @default(NOT_STARTED)
+  score              Float?
+  responses          Json?
+  resumeUrl          String?
+  evaluatedBy        String?
+  attendanceAllowed  Boolean          @default(false)
+  attendanceMarkedAt DateTime?
+  attendanceMarkedBy String?
+  createdAt          DateTime         @default(now())
+  userId             String?
+  application        Application?     @relation(fields: [applicationId], references: [id])
+  round              Round            @relation(fields: [roundId], references: [id])
+  user               User?            @relation(fields: [userId], references: [id])
 
   @@unique([applicationId, roundId])
   @@unique([userId, roundId])

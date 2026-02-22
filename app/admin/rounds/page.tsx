@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
+import { StartRoundsButton } from "@/components/admin/StartRoundButton";
 import Link from "next/link";
 
 export default async function RoundsAdminPage() {
@@ -24,6 +25,8 @@ export default async function RoundsAdminPage() {
 				<Link href="/admin/rounds/markings" className="btn">
 					Markings
 				</Link>
+
+				<StartRoundsButton />
 			</div>
 
 			{/* Rounds list */}
