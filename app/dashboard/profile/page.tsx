@@ -1,10 +1,10 @@
 import { requireUser } from "@/app/lib/auth";
-import { getDashboardData } from "../data";
+import { getProfileData } from "../data";
 import ProfileView from "./ProfileView";
 
 export default async function ProfilePage() {
 	const session = await requireUser();
-	const data = await getDashboardData(session.userId);
-
-	return <ProfileView data={data} />;
+	const data = await getProfileData(session.userId);
+	console.log(data);
+	return <ProfileView user={data} />;
 }

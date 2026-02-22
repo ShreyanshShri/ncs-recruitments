@@ -1,8 +1,6 @@
 import QrCode from "@/components/dashboard/QrCode";
 
-export default function ProfilePage({ data }: any) {
-	const { user } = data;
-
+export default function ProfilePage({ user }: any) {
 	return (
 		<div className="max-w-3xl">
 			<h2 className="text-3xl font-shuriken text-primary-red mb-8 tracking-wide">

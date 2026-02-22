@@ -1,10 +1,10 @@
 import { requireUser } from "@/app/lib/auth";
-import { getDashboardData } from "../data";
+import { getNotificationsData } from "../data";
 import NotificationsView from "./NotificationsView";
 
-export default async function RoundsPage() {
+export default async function NotificationPage() {
 	const session = await requireUser();
-	const data = await getDashboardData(session.userId);
+	const data = await getNotificationsData(session.userId);
 
 	return <NotificationsView data={data} />;
 }
