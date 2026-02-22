@@ -162,7 +162,8 @@ export async function startAllFirstRounds(
 			message: "Initial rounds started",
 			created: result.created,
 		};
-	} catch {
+	} catch (e: any) {
+		console.error(e);
 		return { success: false, message: "Failed to start rounds" };
 	}
 }
