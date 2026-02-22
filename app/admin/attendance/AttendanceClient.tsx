@@ -35,13 +35,22 @@ export default function AttendanceClient({ rounds }: any) {
 		<div className="p-6 space-y-6">
 			{/* round selector */}
 			<select
-				className="input"
+				className="
+    glass-input
+    bg-bg-elevated
+    text-beige
+	 color-scheme-dark
+  "
 				value={selectedRound}
 				onChange={(e) => setSelectedRound(e.target.value)}
 			>
 				<option value="">Select round</option>
 				{rounds.map((r: any) => (
-					<option key={r.id} value={r.id}>
+					<option
+						key={r.id}
+						value={r.id}
+						className="bg-bg-elevated text-neutral-200"
+					>
 						{r.title}
 					</option>
 				))}

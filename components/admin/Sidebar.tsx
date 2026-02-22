@@ -24,6 +24,16 @@ export default function Sidebar() {
 				label="Notifications"
 				active={segment === "notifications"}
 			/>
+			<NavLink
+				href="/admin/attendance"
+				label="Attendance"
+				active={segment === "attendance"}
+			/>
+			<NavLink
+				href="/admin/registrations"
+				label="All Registrations"
+				active={segment === "registrations"}
+			/>
 		</aside>
 	);
 }
