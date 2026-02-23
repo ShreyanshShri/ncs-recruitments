@@ -1,12 +1,34 @@
+"use client";
+
 import Link from "next/link";
 import { RoundType } from "@/types/db";
 import { RoundWithStatus } from "@/app/dashboard/data";
+import { useState } from "react";
 
 type Props = {
 	round: RoundWithStatus;
 };
 
 export function RoundCard({ round }: Props) {
+	const [locked, setLocked] = useState(false);
+
+	const handleClick = () => {
+		if (locked) return;
+
+		setLocked(true);
+
+		setTimeout(() => {
+			setLocked(false);
+		}, 4000);
+	};
+
+	const base =
+		"border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium transition";
+
+	const enabled = "hover:bg-primary-red hover:text-light-beige";
+
+	const disabled = "pointer-events-none opacity-40 cursor-not-allowed";
+
 	return (
 		<div className="space-y-3">
 			{/* TITLE */}
@@ -65,7 +87,8 @@ export function RoundCard({ round }: Props) {
 				{round.type === RoundType.MCQ && (
 					<Link
 						href={`/mcq/${round.id}`}
-						className="border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+						onClick={handleClick}
+						className={`${base} ${locked ? disabled : enabled}`}
 					>
 						Start MCQ
 					</Link>
@@ -74,7 +97,8 @@ export function RoundCard({ round }: Props) {
 				{round.type === RoundType.RESUME && (
 					<Link
 						href={`/dashboard/resume/${round.id}`}
-						className="border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+						onClick={handleClick}
+						className={`${base} ${locked ? disabled : enabled}`}
 					>
 						Submit Resume
 					</Link>
@@ -82,7 +106,8 @@ export function RoundCard({ round }: Props) {
 
 				<Link
 					href={`/dashboard/result/${round.id}`}
-					className="border border-primary-red px-2 py-1 pt-2 rounded text-xs font-shuriken font-medium hover:bg-primary-red hover:text-light-beige transition"
+					onClick={handleClick}
+					className={`${base} ${locked ? disabled : enabled}`}
 				>
 					View Result
 				</Link>
