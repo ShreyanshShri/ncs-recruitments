@@ -45,7 +45,8 @@ export async function createNotification(
 		revalidatePath("/dashboard");
 
 		return { success: true };
-	} catch {
+	} catch (e: any) {
+		console.error(e);
 		return { error: "Failed to create notification" };
 	}
 }

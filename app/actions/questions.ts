@@ -87,7 +87,8 @@ export async function submitMcq(
 				score,
 			},
 		});
-	} catch {
+	} catch (e: any) {
+		console.error(e);
 		return { error: "Failed to submit. Please try again." };
 	}
 

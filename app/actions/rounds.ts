@@ -514,7 +514,8 @@ export async function saveOfflineMarks(
 		});
 
 		return { success: true, message: "Saved" };
-	} catch {
+	} catch (e: any) {
+		console.error(e);
 		return { success: false, message: "Failed to save marks" };
 	}
 }

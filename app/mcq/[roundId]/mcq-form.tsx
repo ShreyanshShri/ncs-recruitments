@@ -14,8 +14,8 @@ export default function McqForm({ round }: { round: any }) {
 
 	const formRef = useRef<HTMLFormElement>(null);
 
-	// const TEST_DURATION = 30 * 60; // 30 min in seconds
-	const TEST_DURATION = 20; // 30 min in seconds
+	const TEST_DURATION = 30 * 60; // 30 min in seconds
+	// const TEST_DURATION = 20; // 30 min in seconds
 	const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
 	const hasSubmittedRef = useRef(false);
 

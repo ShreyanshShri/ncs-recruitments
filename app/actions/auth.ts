@@ -73,7 +73,8 @@ export async function signup(
 		await createSession(user.id, user.role);
 
 		return { success: true, redirectTo: "/dashboard" };
-	} catch {
+	} catch (e: any) {
+		console.error(e);
 		return { error: "Invalid date of birth" };
 	}
 }

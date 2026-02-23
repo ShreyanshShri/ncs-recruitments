@@ -56,7 +56,8 @@ export async function markAttendance(
 		});
 
 		return { success: true, message: "Attendance marked" };
-	} catch {
+	} catch (e: any) {
+		console.error(e);
 		return { success: false, message: "Something went wrong" };
 	}
 }
