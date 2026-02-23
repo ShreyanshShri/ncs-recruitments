@@ -16,6 +16,7 @@
 		"@react-three/drei": "^10.7.7",
 		"@react-three/fiber": "^9.5.0",
 		"@splinetool/react-spline": "^4.1.0",
+		"@tailwindcss/typography": "^0.5.19",
 		"@yudiel/react-qr-scanner": "^2.5.1",
 		"bcryptjs": "^3.0.3",
 		"class-variance-authority": "^0.7.1",

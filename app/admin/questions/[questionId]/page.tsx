@@ -1,5 +1,8 @@
 import { prisma } from "@/app/lib/prisma";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Props = {
 	params: Promise<{
@@ -32,18 +35,40 @@ export default async function Page({ params }: Props) {
 	return (
 		<div className="glass-card p-6 space-y-6">
 			{/* Round meta */}
-			<div className="text-sm text-white/50 space-y-0.5">
-				<div>{question.round.title}</div>
-				<div>
-					{question.round.scope}
-					{question.round.domain && ` • ${question.round.domain}`}
+			<div className="flex justify-between">
+				<div className="text-sm text-white/50 space-y-0.5">
+					<div>{question.round.title}</div>
+					<div>
+						{question.round.scope}
+						{question.round.domain && ` • ${question.round.domain}`}
+					</div>
 				</div>
+				{/* actions */}
+				<Link href={`/admin/questions/edit-question/${questionId}/`}>
+					<button className="btn">Edit</button>
+				</Link>
 			</div>
 
 			{/* Question */}
-			<h1 className="text-xl font-semibold text-white/90">
-				{question.question}
-			</h1>
+			<div className="space-y-2 glass-card p-4">
+				<p className="text-white/40 text-sm">Preview</p>
+
+				<div
+					className="
+						prose prose-invert max-w-none
+						prose-headings:text-beige
+						prose-p:text-neutral-200
+						prose-li:text-neutral-200
+						prose-strong:text-beige
+						prose-code:text-pink-300
+						prose-pre:bg-black/40
+					"
+				>
+					<ReactMarkdown remarkPlugins={[remarkGfm]}>
+						{question.question || "_Nothing to preview_"}
+					</ReactMarkdown>
+				</div>
+			</div>
 
 			{/* MCQ options */}
 			{isMCQ && options && (

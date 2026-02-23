@@ -25,6 +25,46 @@ export async function createQuestion(data: {
 	});
 }
 
+export async function updateQuestionAction(_: any, formData: FormData) {
+	await requireAdmin();
+
+	const id = formData.get("id") as string;
+	const question = formData.get("question") as string;
+	const answer = formData.get("answer") as string;
+	const marks = Number(formData.get("marks"));
+	const type = formData.get("type") as "MCQ" | "INPUT";
+
+	const optionsRaw = formData.getAll("options") as string[];
+
+	await prisma.question.update({
+		where: { id },
+		data: {
+			question,
+			answer,
+			marks,
+			options: type === "MCQ" ? optionsRaw : {},
+		},
+	});
+
+	revalidatePath("/admin/questions");
+
+	return { success: true };
+}
+
+export async function deleteQuestionAction(_: any, formData: FormData) {
+	await requireAdmin();
+
+	const id = formData.get("id") as string;
+
+	await prisma.question.delete({
+		where: { id },
+	});
+
+	revalidatePath("/admin/questions");
+
+	return { success: true };
+}
+
 import { requireUser } from "@/app/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

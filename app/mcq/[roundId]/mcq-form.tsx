@@ -2,6 +2,8 @@
 
 import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { submitMcq } from "@/app/actions/questions";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type QState = {
 	answer: string | null;
@@ -215,8 +217,26 @@ export default function McqForm({ round }: { round: any }) {
 
 					<div className="bg-beige text-bg-dark p-6 rounded-2xl border border-border-red space-y-4">
 						<p className="font-shuriken text-dark-red text-lg">
-							Q{currentIndex + 1}. {currentQ.question}
+							Q{currentIndex + 1}.
 						</p>
+						{/* <div className="p-4 bg-beige-dark text-bg-dark rounded-2xl border border-border-red"> */}
+						<div className="p-4 bg-[color-mix(in_srgb,var(--color-beige),var(--color-bg-dark)_5%)] text-bg-dark rounded-2xl border border-border-red">
+							<div
+								className="
+												prose prose-invert max-w-none
+												prose-headings:text-dark-red
+												prose-p:text-deep-brown
+												prose-li:text-deep-brown
+												prose-strong:text-deep-brown
+												prose-code:text-deep-brown
+												prose-pre:bg-black/40
+											"
+							>
+								<ReactMarkdown remarkPlugins={[remarkGfm]}>
+									{currentQ.question || "_Nothing to preview_"}
+								</ReactMarkdown>
+							</div>
+						</div>
 
 						{/* MCQ */}
 						{currentQ.type === "MCQ" &&

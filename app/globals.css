@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
 @theme {
 	/* --- Fonts --- */
 	/* This maps 'font-shuriken' to your Next.js localFont variable */
@@ -40,6 +42,7 @@
 	--color-bg-dark: #120a0a;
 	--color-deep-brown: #1e1312;
 	--color-beige: #e6d2b5;
+	--color-beige-dark: #dad0b5;
 	--color-light-beige: #f1e2c8;
 	--color-border-red: #8e2320;
 

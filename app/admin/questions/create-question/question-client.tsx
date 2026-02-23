@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { createQuestion } from "@/app/actions/questions";
 import { Domain, RoundScope } from "@prisma/client";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type RoundOption = {
 	id: string;
@@ -74,13 +76,33 @@ export default function QuestionClient({ rounds }: { rounds: RoundOption[] }) {
 			</select>
 
 			{/* Question */}
-			<label className="text-white/60 font-lg mb-2">Question</label>
+			<label className="text-white/60 font-lg mb-2">Question (Markdown)</label>
 			<textarea
-				placeholder="Question"
 				value={question}
 				onChange={(e) => setQuestion(e.target.value)}
-				className="glass-input min-h-30 resize-y"
+				placeholder="Write your question in Markdown..."
+				className="glass-input min-h-40 resize-y font-mono"
 			/>
+
+			<div className="space-y-2 glass-card p-4">
+				<p className="text-white/40 text-sm">Preview</p>
+
+				<div
+					className="
+			prose prose-invert max-w-none
+			prose-headings:text-beige
+			prose-p:text-neutral-200
+			prose-li:text-neutral-200
+			prose-strong:text-beige
+			prose-code:text-pink-300
+			prose-pre:bg-black/40
+		"
+				>
+					<ReactMarkdown remarkPlugins={[remarkGfm]}>
+						{question || "_Nothing to preview_"}
+					</ReactMarkdown>
+				</div>
+			</div>
 
 			{/* Type selector */}
 			<label className="text-white/60 font-lg mb-2">Type</label>
