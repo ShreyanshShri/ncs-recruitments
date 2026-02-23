@@ -14,13 +14,10 @@ export default function AdminLogin() {
 		}
 	}, [state]);
 
-	const inputStyle =
-		"w-full rounded-lg bg-bg-dark/60 border border-border-red px-4 py-3 text-sm text-light-beige placeholder:text-light-beige/40 focus:outline-none focus:ring-2 focus:ring-primary-red transition";
-
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-bg-dark px-6 py-10 font-sans">
+		<div className="flex items-center justify-center bg-bg-dark px-6 py-10 font-sans">
 			<form action={action} className="w-full max-w-md space-y-6">
-				<h1 className="text-beige text-3xl text-center font-shuriken">
+				<h1 className="opacity-90 text-3xl text-center font-bold">
 					Admin Login
 				</h1>
 
@@ -31,7 +28,7 @@ export default function AdminLogin() {
 					autoComplete="email"
 					placeholder="Email"
 					required
-					className={inputStyle}
+					className="glass-input w-full"
 				/>
 
 				{/* PASSWORD */}
@@ -41,7 +38,7 @@ export default function AdminLogin() {
 					autoComplete="current-password"
 					placeholder="Password"
 					required
-					className={inputStyle}
+					className="glass-input w-full"
 				/>
 
 				{/* ERROR */}
@@ -50,11 +47,7 @@ export default function AdminLogin() {
 				)}
 
 				{/* SUBMIT */}
-				<button
-					type="submit"
-					disabled={isPending}
-					className="w-full rounded-lg bg-primary-red py-3 text-light-beige tracking-widest hover:bg-dark-red disabled:bg-border-red transition font-shuriken"
-				>
+				<button type="submit" disabled={isPending} className="btn w-full">
 					{isPending ? "LOGGING IN..." : "LOGIN"}
 				</button>
 			</form>
