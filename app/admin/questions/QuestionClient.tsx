@@ -83,11 +83,12 @@ export default function QuestionsClient({ initialData }: Props) {
 			{/* List */}
 			<div className="space-y-3">
 				{initialData.data.map((q: any) => (
-					<Link key={q.id} href={`/admin/questions/${q.id}`}>
+					<Link key={q.id} href={`/admin/questions/${q.id}`} className="mt-2">
 						<div className="glass-card p-4 space-y-2">
 							<div className="text-xs text-white/50">
 								{q.round.title} •{" "}
-								{q.round.scope == "DOMAIN" ? q.round.domain : "COMMON"}
+								{q.round.scope == "DOMAIN" ? q.round.domain : "COMMON"} •{" "}
+								{q.marks}
 							</div>
 
 							<div className="text-white/85">{q.question}</div>
