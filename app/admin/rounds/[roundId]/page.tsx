@@ -37,6 +37,21 @@ export default async function RoundPage({
 		},
 	});
 
+	const promotionRounds = await prisma.round.findMany({
+		where: {
+			year: round.year,
+			scope: round.scope,
+			isPublished: false,
+			id: { not: round.id },
+		},
+		orderBy: { order: "asc" },
+		select: {
+			id: true,
+			title: true,
+			order: true,
+		},
+	});
+
 	return (
 		<div className="">
 			{/* Round header */}
@@ -56,6 +71,7 @@ export default async function RoundPage({
 							roundId={round.id}
 							totalSubmissions={submissions.length}
 							isPublished={round.isPublished}
+							promotionRounds={promotionRounds}
 						/>
 					</div>
 
@@ -71,6 +87,7 @@ export default async function RoundPage({
 							roundId={round.id}
 							totalSubmissions={submissions.length}
 							isPublished={round.isPublished}
+							promotionRounds={promotionRounds}
 						/>
 					</div>
 
@@ -94,6 +111,7 @@ export default async function RoundPage({
 							roundId={round.id}
 							totalSubmissions={submissions.length}
 							isPublished={round.isPublished}
+							promotionRounds={promotionRounds}
 						/>
 					</div>
 

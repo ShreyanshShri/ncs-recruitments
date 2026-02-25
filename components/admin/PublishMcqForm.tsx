@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { publishMcqRound, PublishState } from "@/app/actions/rounds";
+import { publishRound, PublishState } from "@/app/actions/rounds";
 
 const initialState: PublishState = {
 	success: false,
@@ -12,14 +12,16 @@ export function PublishMcqForm({
 	roundId,
 	totalSubmissions,
 	isPublished,
+	promotionRounds,
 }: {
 	roundId: string;
 	totalSubmissions: number;
 	isPublished: boolean;
+	promotionRounds: { id: string; title: string; order: number }[];
 }) {
 	const defaultTake = Math.ceil(totalSubmissions / 2);
 
-	const action = publishMcqRound.bind(null, roundId);
+	const action = publishRound.bind(null, roundId);
 
 	const [state, formAction, pending] = useActionState(action, initialState);
 
@@ -52,6 +54,20 @@ export function PublishMcqForm({
 					max={totalSubmissions}
 					className="glass-input"
 				/>
+			</div>
+
+			<div className="space-y-1.5">
+				<label className="text-sm text-white/70">Promote to round</label>
+
+				<select name="promoteToRoundId" className="glass-input">
+					<option value="">Final round (no promotion)</option>
+
+					{promotionRounds.map((r) => (
+						<option key={r.id} value={r.id}>
+							Round {r.order} — {r.title}
+						</option>
+					))}
+				</select>
 			</div>
 
 			<label className="flex items-center gap-2 text-sm text-white/70">
