@@ -40,8 +40,8 @@ export default async function RoundPage({
 	const promotionRounds = await prisma.round.findMany({
 		where: {
 			year: round.year,
-			scope: round.scope,
-			isPublished: false,
+			// scope: round.scope,
+			// isPublished: false,
 			id: { not: round.id },
 		},
 		orderBy: { order: "asc" },

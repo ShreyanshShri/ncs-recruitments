@@ -63,7 +63,11 @@ export function PublishMcqForm({
 					<option value="">Final round (no promotion)</option>
 
 					{promotionRounds.map((r) => (
-						<option key={r.id} value={r.id}>
+						<option
+							key={r.id}
+							value={r.id}
+							className="bg-bg-elevated text-neutral-200"
+						>
 							Round {r.order} — {r.title}
 						</option>
 					))}

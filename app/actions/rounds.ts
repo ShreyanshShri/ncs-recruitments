@@ -231,59 +231,51 @@ export async function publishRound(
 			const round = await tx.round.findUnique({ where: { id: roundId } });
 			if (!round) return { success: false, message: "Round not found" };
 
-			// 🎯 ranked submissions (deterministic)
-			const yearFilter =
-				round.scope === "DOMAIN"
-					? { application: { user: { profile: { year: round.year } } } }
-					: { user: { profile: { year: round.year } } };
-
-			const statusFilter =
-				round.type === "MCQ"
-					? {
-							status: {
-								in: [SubmissionStatus.SUBMITTED, SubmissionStatus.EVALUATED],
-							},
-						}
-					: { status: SubmissionStatus.EVALUATED };
-
+			// get ranked submissions
 			const submissions = await tx.submission.findMany({
 				where: {
 					roundId,
 					score: { not: null },
-					...yearFilter,
-					...statusFilter,
+					...(round.type === "MCQ"
+						? {
+								status: {
+									in: [SubmissionStatus.SUBMITTED, SubmissionStatus.EVALUATED],
+								},
+							}
+						: {
+								status: SubmissionStatus.EVALUATED,
+							}),
 				},
 				orderBy: [{ score: "desc" }, { createdAt: "asc" }],
 			});
 
 			if (!submissions.length) {
-				return { success: false, message: "No evaluated submissions" };
+				return { success: false, message: "No submissions" };
 			}
 
 			const qualified = submissions.slice(0, takeCount);
 			const cutoff = qualified.at(-1)?.score ?? 0;
 
-			// ✅ MCQ auto-upgrade
+			// MCQ auto-upgrade
 			if (round.type === "MCQ") {
 				await tx.submission.updateMany({
 					where: {
 						id: { in: qualified.map((q) => q.id) },
-						status: "SUBMITTED",
+						status: SubmissionStatus.SUBMITTED,
 					},
-					data: { status: "EVALUATED" },
+					data: { status: SubmissionStatus.EVALUATED },
 				});
 			}
 
-			// ❌ REJECT NON-QUALIFIED
+			// reject others (your existing behaviour kept)
 			if (round.scope === "DOMAIN") {
 				await tx.application.updateMany({
 					where: {
 						domain: round.domain!,
-						user: { profile: { year: round.year } },
-						status: { not: "REJECTED" },
+						status: { not: ApplicationStatus.REJECTED },
 						id: { notIn: qualified.map((q) => q.applicationId!) },
 					},
-					data: { status: "REJECTED" },
+					data: { status: ApplicationStatus.REJECTED },
 				});
 			}
 
@@ -295,28 +287,14 @@ export async function publishRound(
 				await tx.application.updateMany({
 					where: {
 						userId: { in: rejectedUserIds },
-						user: { profile: { year: round.year } },
-						status: { not: "REJECTED" },
+						status: { not: ApplicationStatus.REJECTED },
 					},
-					data: { status: "REJECTED" },
+					data: { status: ApplicationStatus.REJECTED },
 				});
 			}
 
-			// 🚀 PROMOTION (explicit target)
+			// 🚀 PROMOTE → to EXACT selected round (no validation, no logic)
 			if (promoteToRoundId) {
-				const targetRound = await tx.round.findUnique({
-					where: { id: promoteToRoundId },
-					select: { scope: true, year: true },
-				});
-
-				if (!targetRound || targetRound.year !== round.year) {
-					throw new Error("Invalid promotion round");
-				}
-
-				if (targetRound.scope !== round.scope) {
-					throw new Error("Scope mismatch");
-				}
-
 				const data =
 					round.scope === "COMMON"
 						? qualified.map((q) => ({
@@ -334,7 +312,7 @@ export async function publishRound(
 				});
 			}
 
-			// 📦 FINALIZE
+			// finalize
 			await tx.round.update({
 				where: { id: roundId },
 				data: {
